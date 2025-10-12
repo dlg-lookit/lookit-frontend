@@ -62,3 +62,31 @@ export const Fingerprint = ({ size = 20, color = '#666' }) => (
 export const Check = ({ size = 20, color = '#666' }) => (
   <Text style={{ fontSize: size, color }}>✓</Text>
 );
+
+export const Sun = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>☀️</Text>
+);
+
+export const Cloud = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>☁️</Text>
+);
+
+export const Home = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>🏠</Text>
+);
+
+export const Search = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>🔍</Text>
+);
+
+export const User = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>👤</Text>
+);
+
+export const Settings = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>⚙️</Text>
+);
+
+export const BarChart3 = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>📊</Text>
+);

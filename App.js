@@ -4,20 +4,24 @@ import { ThemeProvider } from './src/theme/ThemeProvider';
 import LoginScreen from './src/features/auth/screens/LoginScreen';
 import SignupStepOne from './src/features/auth/screens/SignupStepOne';
 import SignupStepTwo from './src/features/auth/screens/SignupStepTwo';
+import HomeScreen from './src/features/home/screens/HomeScreen';
 
 function MainApp() {
-  const [currentScreen, setCurrentScreen] = useState('login'); // 'login' | 'signup-step-1' | 'signup-step-2'
+  const [currentScreen, setCurrentScreen] = useState('login'); // 'login' | 'signup-step-1' | 'signup-step-2' | 'home'
   const [signupData, setSignupData] = useState(null);
+  const [user, setUser] = useState(null);
 
   const handleLogin = (email, password) => {
-    // Demo: mostrar alert con credenciales
-    Alert.alert(
-      '¡Login Exitoso!', 
-      `Email: ${email}\nPassword: ${password.replace(/./g, '•')}`,
-      [
-        { text: 'OK' }
-      ]
-    );
+    // Demo: simular login exitoso
+    const userData = {
+      name: email.split('@')[0],
+      email: email,
+      temperature: 22,
+      location: 'Ciudad de México',
+    };
+    
+    setUser(userData);
+    setCurrentScreen('home');
   };
 
   const handleSignup = () => {
@@ -35,37 +39,37 @@ function MainApp() {
       ...personalizeData
     };
     
-    // Demo: mostrar alert con datos completos del registro
-    Alert.alert(
-      '¡Bienvenido a Lookit!', 
-      `Cuenta creada para ${completeSignupData.firstName} ${completeSignupData.lastName}!\n\nEstilos: ${completeSignupData.preferredStyles.join(', ')}\nTallas: ${completeSignupData.shirtSize}, ${completeSignupData.pantsSize}, ${completeSignupData.shoeSize}`,
-      [
-        { 
-          text: 'Genial!', 
-          onPress: () => {
-            setCurrentScreen('login');
-            setSignupData(null);
-          }
-        }
-      ]
-    );
+    // Demo: crear usuario y ir a home
+    const userData = {
+      name: completeSignupData.firstName,
+      email: completeSignupData.email,
+      temperature: 22,
+      location: 'Ciudad de México',
+      preferences: completeSignupData.preferredStyles,
+      sizes: {
+        shirt: completeSignupData.shirtSize,
+        pants: completeSignupData.pantsSize,
+        shoes: completeSignupData.shoeSize,
+      }
+    };
+    
+    setUser(userData);
+    setCurrentScreen('home');
+    setSignupData(null);
   };
 
   const handleSkipPersonalization = () => {
     // Demo: registro básico sin personalización
-    Alert.alert(
-      '¡Bienvenido a Lookit!', 
-      `Cuenta creada para ${signupData.firstName} ${signupData.lastName}!\n\nPuedes personalizar tu experiencia más tarde en configuración.`,
-      [
-        { 
-          text: 'Entendido', 
-          onPress: () => {
-            setCurrentScreen('login');
-            setSignupData(null);
-          }
-        }
-      ]
-    );
+    const userData = {
+      name: signupData.firstName,
+      email: signupData.email,
+      temperature: 22,
+      location: 'Ciudad de México',
+    };
+    
+    setUser(userData);
+    setCurrentScreen('home');
+    setSignupData(null);
   };
 
   const handleBackToLogin = () => {
@@ -77,7 +81,31 @@ function MainApp() {
     setCurrentScreen('signup-step-1');
   };
 
+  const handleHomeNavigation = (destination) => {
+    // Demo: manejar navegación desde home
+    Alert.alert(
+      'Navegación', 
+      `Navegar a: ${destination}`,
+      [{ text: 'OK' }]
+    );
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    setCurrentScreen('login');
+  };
+
   // Renderizar pantalla según el estado actual
+  if (currentScreen === 'home' && user) {
+    return (
+      <HomeScreen 
+        user={user}
+        onNavigate={handleHomeNavigation}
+        onLogout={handleLogout}
+      />
+    );
+  }
+
   if (currentScreen === 'signup-step-1') {
     return (
       <SignupStepOne 

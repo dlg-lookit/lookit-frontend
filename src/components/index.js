@@ -23,3 +23,5 @@ export { default as RadioGroup } from './RadioGroup';
 export { default as Switch } from './Switch';
 export { default as Badge } from './Badge';
 export { default as Card } from './Card';
+export { default as ImageWithFallback } from './ImageWithFallback';
+export { default as BottomNavigation } from './BottomNavigation';

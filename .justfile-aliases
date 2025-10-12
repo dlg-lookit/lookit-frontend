@@ -1,0 +1,13 @@
+# Aliases cortos para desarrollo rápido
+# Uso: just s (start), just a (android), etc.
+
+# Alias para comandos más comunes
+s: run          # just s = just run
+start: run      # just start = just run
+a: android      # just a = just android  
+i: ios          # just i = just ios
+w: web          # just w = just web
+c: clean        # just c = just clean
+d: dev          # just d = just dev
+q: qr           # just q = just qr
+h: help         # just h = just help

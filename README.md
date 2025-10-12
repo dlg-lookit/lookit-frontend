@@ -2,6 +2,68 @@
 
 Una aplicación móvil React Native con Expo que sugiere outfits basados en el clima y las preferencias del usuario.
 
+## 🚀 Inicio Rápido
+
+### Prerrequisitos
+
+- [Node.js](https://nodejs.org/) (v16 o superior)
+- [Expo CLI](https://docs.expo.dev/get-started/installation/)
+- [Just](https://github.com/casey/just) (task runner) - Opcional pero recomendado
+
+### Instalación y Ejecución
+
+```bash
+# Clonar el repositorio
+git clone git@github.com:dlg-lookit/lookit-frontend.git
+cd lookit-frontend
+
+# Setup automático (instala dependencias y verifica herramientas)
+./setup.sh
+
+# Con Just (recomendado)
+just install  # Instalar dependencias
+just run      # Iniciar la aplicación
+
+# Sin Just (comandos tradicionales)
+npm install
+npx expo start
+```
+
+## 📱 Comandos Disponibles (Just)
+
+Usamos [Just](https://github.com/casey/just) como task runner para simplificar los comandos:
+
+```bash
+# Comandos principales
+just run        # Iniciar en modo desarrollo
+just android    # Ejecutar en Android
+just ios        # Ejecutar en iOS (solo macOS)
+just web        # Ejecutar en navegador web
+
+# Desarrollo
+just clean      # Limpiar cache y ejecutar
+just dev        # Setup completo (instalar + limpiar + ejecutar)
+just qr         # Generar QR para Expo Go
+just tunnel     # Ejecutar en modo túnel
+
+# Mantenimiento
+just install    # Instalar dependencias
+just update     # Actualizar dependencias
+just check      # Verificar estado del proyecto
+
+# Ver todos los comandos
+just --list
+just help
+
+# Aliases cortos (opcional)
+just s          # = just run (start)
+just a          # = just android
+just i          # = just ios
+just w          # = just web
+just c          # = just clean
+just d          # = just dev
+```
+
 ## 🏗️ Arquitectura
 
 Este proyecto utiliza **Feature-Based Architecture** (Arquitectura basada en características), donde el código se organiza por dominios de negocio en lugar de por tipos de archivos.
