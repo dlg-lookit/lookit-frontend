@@ -5,9 +5,13 @@ import LoginScreen from './src/features/auth/screens/LoginScreen';
 import SignupStepOne from './src/features/auth/screens/SignupStepOne';
 import SignupStepTwo from './src/features/auth/screens/SignupStepTwo';
 import HomeScreen from './src/features/home/screens/HomeScreen';
+import OutfitSuggestionsScreen from './src/features/outfit/screens/OutfitSuggestionsScreen';
+import PersonalStatsScreen from './src/features/stats/screens/PersonalStatsScreen';
+import WardrobeScreen from './src/features/wardrobe/screens/WardrobeScreen';
+import StyleProfileScreen from './src/features/profile/screens/StyleProfileScreen';
 
 function MainApp() {
-  const [currentScreen, setCurrentScreen] = useState('login'); // 'login' | 'signup-step-1' | 'signup-step-2' | 'home'
+  const [currentScreen, setCurrentScreen] = useState('login'); // 'login' | 'signup-step-1' | 'signup-step-2' | 'home' | 'suggestions' | 'wardrobe' | 'stats' | 'profile'
   const [signupData, setSignupData] = useState(null);
   const [user, setUser] = useState(null);
 
@@ -82,12 +86,17 @@ function MainApp() {
   };
 
   const handleHomeNavigation = (destination) => {
-    // Demo: manejar navegación desde home
-    Alert.alert(
-      'Navegación', 
-      `Navegar a: ${destination}`,
-      [{ text: 'OK' }]
-    );
+    // Navegar a diferentes pantallas
+    if (destination === 'home' || destination === 'suggestions' || destination === 'wardrobe' || destination === 'stats' || destination === 'profile') {
+      setCurrentScreen(destination);
+    } else {
+      // Para otras navegaciones, mostrar demo
+      Alert.alert(
+        'Navegación', 
+        `Navegar a: ${destination}`,
+        [{ text: 'OK' }]
+      );
+    }
   };
 
   const handleLogout = () => {
@@ -99,6 +108,43 @@ function MainApp() {
   if (currentScreen === 'home' && user) {
     return (
       <HomeScreen 
+        user={user}
+        onNavigate={handleHomeNavigation}
+        onLogout={handleLogout}
+      />
+    );
+  }
+
+  if (currentScreen === 'suggestions' && user) {
+    return (
+      <OutfitSuggestionsScreen 
+        user={user}
+        onNavigate={handleHomeNavigation}
+      />
+    );
+  }
+
+  if (currentScreen === 'wardrobe' && user) {
+    return (
+      <WardrobeScreen 
+        user={user}
+        onNavigate={handleHomeNavigation}
+      />
+    );
+  }
+
+  if (currentScreen === 'stats' && user) {
+    return (
+      <PersonalStatsScreen 
+        user={user}
+        onNavigate={handleHomeNavigation}
+      />
+    );
+  }
+
+  if (currentScreen === 'profile' && user) {
+    return (
+      <StyleProfileScreen 
         user={user}
         onNavigate={handleHomeNavigation}
         onLogout={handleLogout}

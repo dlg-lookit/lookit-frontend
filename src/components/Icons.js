@@ -90,3 +90,55 @@ export const Settings = ({ size = 20, color = '#666' }) => (
 export const BarChart3 = ({ size = 20, color = '#666' }) => (
   <Text style={{ fontSize: size, color }}>📊</Text>
 );
+
+export const Bookmark = ({ size = 20, color = '#666', filled = false }) => (
+  <Text style={{ fontSize: size, color }}>{filled ? '🔖' : '🏷️'}</Text>
+);
+
+export const ChevronDown = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>⌄</Text>
+);
+
+export const Trophy = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>🏆</Text>
+);
+
+export const Flame = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>🔥</Text>
+);
+
+export const Share2 = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>📤</Text>
+);
+
+export const Award = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>🥇</Text>
+);
+
+export const Plus = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>+</Text>
+);
+
+export const Camera = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>📷</Text>
+);
+
+export const Filter = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>⚗️</Text>
+);
+
+export const Edit3 = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>✏️</Text>
+);
+
+export const Palette = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>🎨</Text>
+);
+
+export const Star = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>⭐</Text>
+);
+
+export const LogOut = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>🚪</Text>
+);
