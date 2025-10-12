@@ -13,20 +13,27 @@ const darkTheme = {
     // Primary
     primary: '#f8f9fa', // equivalente a oklch(0.985 0 0)
     primaryForeground: '#2a2a2a',
+    primaryMuted: '#404040',
     
     // Secondary
     secondary: '#404040', // equivalente a oklch(0.269 0 0)
     secondaryForeground: '#f8f9fa',
     
     // Muted
+    muted: '#a1a1aa',
     mutedBackground: '#404040', // equivalente a oklch(0.269 0 0)
     mutedText: '#a1a1aa',
     
-    // Accent
-    accentBackground: '#404040', // equivalente a oklch(0.269 0 0)
-    accentText: '#f8f9fa',
+    // Card
+    card: '#1f1f1f',
+    cardForeground: '#f8f9fa',
+    
+    // Border
+    border: '#404040',
     
     // Destructive/Error
+    destructive: '#dc2626', // equivalente a oklch(0.396 0.141 25.723)
+    destructiveForeground: '#ffffff',
     error: '#dc2626', // equivalente a oklch(0.396 0.141 25.723)
     errorText: '#ffffff',
     

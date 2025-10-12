@@ -10,20 +10,27 @@ const lightTheme = createTheme({
     // Primary
     primary: '#030213',
     primaryForeground: '#ffffff',
+    primaryMuted: '#f0f0f5',
     
     // Secondary  
     secondary: '#f1f2f6', // equivalente a oklch(0.95 0.0058 264.53)
     secondaryForeground: '#030213',
     
     // Muted
+    muted: '#717182',
     mutedBackground: '#ececf0',
     mutedText: '#717182',
     
-    // Accent
-    accentBackground: '#e9ebef',
-    accentText: '#030213',
+    // Card
+    card: '#ffffff',
+    cardForeground: '#2a2a2a',
+    
+    // Border
+    border: '#e5e7eb',
     
     // Destructive/Error
+    destructive: '#d4183d',
+    destructiveForeground: '#ffffff',
     error: '#d4183d',
     errorText: '#ffffff',
     
@@ -52,23 +59,32 @@ const lightTheme = createTheme({
   },
   
   spacing: {
+    none: 0,
     xs: 4,
-    s: 8,
-    m: 16,
-    l: 24,
+    sm: 8,
+    md: 16,
+    lg: 24,
     xl: 32,
     xxl: 40,
     xxxl: 48,
+    // Mantener compatibilidad con nombres anteriores
+    s: 8,
+    m: 16,
+    l: 24,
   },
   
   borderRadii: {
     none: 0,
     xs: 4,
-    s: 6,
-    m: 10, // equivalente a --radius: 0.625rem (10px)
-    l: 16,
+    sm: 6,
+    md: 10, // equivalente a --radius: 0.625rem (10px)
+    lg: 16,
     xl: 20,
     full: 9999,
+    // Mantener compatibilidad con nombres anteriores
+    s: 6,
+    m: 10,
+    l: 16,
   },
   
   // Tipografía
@@ -120,6 +136,12 @@ const lightTheme = createTheme({
       fontWeight: 'normal',
       color: 'mutedText',
       lineHeight: 16,
+    },
+    button: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: 'primaryForeground',
+      lineHeight: 20,
     },
   },
   

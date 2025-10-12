@@ -18,3 +18,47 @@ export const EyeIconAlt = ({ size = 20, color = '#666' }) => (
 export const EyeOffIconAlt = ({ size = 20, color = '#666' }) => (
   <Text style={{ fontSize: size, color }}>●</Text>
 );
+
+export const ArrowLeft = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>←</Text>
+);
+
+export const ArrowRight = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>→</Text>
+);
+
+export const Sparkles = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>✨</Text>
+);
+
+export const Shirt = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>👕</Text>
+);
+
+export const TrendingUp = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>📈</Text>
+);
+
+export const Heart = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>❤️</Text>
+);
+
+export const Zap = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>⚡</Text>
+);
+
+export const Target = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>🎯</Text>
+);
+
+export const Calendar = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>📅</Text>
+);
+
+export const Fingerprint = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>👆</Text>
+);
+
+export const Check = ({ size = 20, color = '#666' }) => (
+  <Text style={{ fontSize: size, color }}>✓</Text>
+);
