@@ -207,7 +207,6 @@ const LoginScreen = ({ onLogin, onSignup }) => {
                     borderRadius: 12,
                     paddingHorizontal: 16,
                     fontSize: 16,
-                    borderWidth: 1,
                   }}
                 />
               </Box>
@@ -237,7 +236,6 @@ const LoginScreen = ({ onLogin, onSignup }) => {
                       paddingHorizontal: 16,
                       paddingRight: 48,
                       fontSize: 16,
-                      borderWidth: 1,
                     }}
                   />
                   <TouchableOpacity
@@ -322,10 +320,10 @@ const LoginScreen = ({ onLogin, onSignup }) => {
             {/* Demo hint (estilo referencia) */}
             <Box 
               marginTop="xl"
+              backgroundColor={isDark ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.6)'}
               borderRadius="lg"
               padding="md"
               style={{
-                backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.6)',
                 borderWidth: 1,
                 borderColor: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)',
               }}

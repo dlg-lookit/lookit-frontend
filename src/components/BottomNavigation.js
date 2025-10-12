@@ -1,17 +1,23 @@
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import { Box, Text, useTheme } from '../theme';
-import { Home, Shirt, Sparkles, BarChart3, User } from './Icons';
+import { 
+  LucideHome, 
+  LucideShirt, 
+  LucideSparkles, 
+  LucideBarChart3, 
+  LucideUser 
+} from './LucideIcons';
 
 const BottomNavigation = ({ currentTab = 'home', onTabChange }) => {
   const theme = useTheme();
 
   const navItems = [
-    { id: 'home', label: 'Home', icon: Home },
-    { id: 'wardrobe', label: 'Wardrobe', icon: Shirt },
-    { id: 'suggestions', label: 'Suggestions', icon: Sparkles },
-    { id: 'stats', label: 'Stats', icon: BarChart3 },
-    { id: 'profile', label: 'Profile', icon: User },
+    { id: 'home', label: 'Home', icon: LucideHome },
+    { id: 'wardrobe', label: 'Wardrobe', icon: LucideShirt },
+    { id: 'suggestions', label: 'Suggestions', icon: LucideSparkles },
+    { id: 'stats', label: 'Stats', icon: LucideBarChart3 },
+    { id: 'profile', label: 'Profile', icon: LucideUser },
   ];
 
   const handleTabPress = (tabId) => {

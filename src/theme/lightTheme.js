@@ -133,6 +133,30 @@ const lightTheme = createTheme({
     red800: '#991b1b',
     red900: '#7f1d1d',
     
+    // Colores rose para elementos de la referencia
+    rose50: '#fff1f2',
+    rose100: '#ffe4e6',
+    rose200: '#fecdd3',
+    rose300: '#fda4af',
+    rose400: '#fb7185',
+    rose500: '#f43f5e',
+    rose600: '#e11d48',
+    rose700: '#be123c',
+    rose800: '#9f1239',
+    rose900: '#881337',
+    
+    // Colores blue para elementos decorativos
+    blue50: '#eff6ff',
+    blue100: '#dbeafe',
+    blue200: '#bfdbfe',
+    blue300: '#93c5fd',
+    blue400: '#60a5fa',
+    blue500: '#3b82f6',
+    blue600: '#2563eb',
+    blue700: '#1d4ed8',
+    blue800: '#1e40af',
+    blue900: '#1e3a8a',
+    
     // Transparencias
     overlay: 'rgba(0, 0, 0, 0.5)',
     backdrop: 'rgba(0, 0, 0, 0.25)',

@@ -1,31 +1,133 @@
 import React, { useState } from 'react';
-import { ScrollView, TouchableOpacity } from 'react-native';
+import { ScrollView, TouchableOpacity, Switch } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { Box, Text, useTheme } from '../../../theme';
+import { useThemeMode } from '../../../theme/ThemeProvider';
 import { 
   Input, 
   Label, 
-  Button, 
-  Switch,
+  Button,
   Card 
 } from '../../../components';
 import { 
-  Sparkles, 
-  Shirt, 
-  TrendingUp, 
-  Heart, 
-  Zap, 
-  Target,
-  Calendar,
-  Fingerprint,
-  ArrowRight,
-  Check,
-  ArrowLeft
-} from '../../../components/Icons';
+  LucideArrowLeft,
+  LucideShirt,
+  LucideWind,
+  LucideGlasses,
+  LucideSparkles,
+  LucideBriefcase,
+  LucidePartyPopper
+} from '../../../components/LucideIcons';
 
-const SignupStepTwo = ({ onBack, onComplete, onSkip }) => {
+// Componente Logo de Lookit (estilo SignupStepTwo referencia con tema púrpura)
+const LookitLogo = () => {
   const theme = useTheme();
   
-  // Estados del formulario
+  return (
+    <Box alignItems="center" marginBottom="xl">
+      {/* Logo principal inspirado en la referencia */}
+      <Box flexDirection="row" alignItems="center" marginBottom="sm">
+        {/* L */}
+        <Text 
+          style={{ 
+            fontSize: 38, 
+            fontWeight: '300',
+            letterSpacing: -1,
+            color: theme.colors.foreground
+          }}
+        >
+          L
+        </Text>
+        
+        {/* OO como lentes minimalistas con tema púrpura */}
+        <Box flexDirection="row" alignItems="center" marginHorizontal="sm">
+          {/* Lente izquierdo */}
+          <Box
+            width={20}
+            height={20}
+            borderRadius="full"
+            borderWidth={2}
+            borderColor="purple400"
+            backgroundColor="transparent"
+            position="relative"
+          >
+            <Box
+              width={8}
+              height={8}
+              borderRadius="full"
+              backgroundColor="purple100"
+              position="absolute"
+              top={6}
+              left={6}
+            />
+          </Box>
+          
+          {/* Puente */}
+          <Box
+            width={4}
+            height={2}
+            backgroundColor="purple400"
+            marginHorizontal="xs"
+          />
+          
+          {/* Lente derecho */}
+          <Box
+            width={20}
+            height={20}
+            borderRadius="full"
+            borderWidth={2}
+            borderColor="purple400"
+            backgroundColor="transparent"
+            position="relative"
+          >
+            <Box
+              width={8}
+              height={8}
+              borderRadius="full"
+              backgroundColor="purple100"
+              position="absolute"
+              top={6}
+              left={6}
+            />
+          </Box>
+        </Box>
+        
+        {/* kit */}
+        <Text 
+          style={{ 
+            fontSize: 38, 
+            fontWeight: '300',
+            letterSpacing: -1,
+            color: theme.colors.foreground
+          }}
+        >
+          kit
+        </Text>
+      </Box>
+      
+      {/* Title and Step indicator */}
+      <Text 
+        style={{ 
+          fontSize: 20, 
+          color: theme.colors.foreground,
+          marginBottom: 4,
+          fontWeight: '400'
+        }}
+      >
+        Personalize your experience
+      </Text>
+      <Text variant="caption" color="muted">
+        Step 2 of 2 · Optional preferences
+      </Text>
+    </Box>
+  );
+};
+
+const SignupStepTwo = ({ onBack, onComplete, onSkip }) => {
+  const { isDark } = useThemeMode();
+  const theme = useTheme();
+  
+  // Estados del formulario (siguiendo la referencia)
   const [formData, setFormData] = useState({
     preferredStyles: [],
     shirtSize: '',
@@ -35,23 +137,18 @@ const SignupStepTwo = ({ onBack, onComplete, onSkip }) => {
     biometricEnabled: false,
   });
 
-  // Opciones de estilos con iconos
+  // Opciones de estilos con iconos (siguiendo la referencia)
   const styleOptions = [
-    { id: 'casual', name: 'Casual', icon: Shirt, color: 'blue' },
-    { id: 'streetwear', name: 'Streetwear', icon: Zap, color: 'purple' },
-    { id: 'formal', name: 'Formal', icon: Target, color: 'slate' },
-    { id: 'minimalist', name: 'Minimalist', icon: Sparkles, color: 'rose' },
-    { id: 'trendy', name: 'Trendy', icon: TrendingUp, color: 'orange' },
-    { id: 'bohemian', name: 'Bohemian', icon: Heart, color: 'emerald' },
+    { id: 'casual', label: 'Casual', icon: LucideShirt, color: 'blue400' },
+    { id: 'streetwear', label: 'Streetwear', icon: LucideWind, color: 'purple400' },
+    { id: 'formal', label: 'Formal', icon: LucideBriefcase, color: 'gray600' },
+    { id: 'minimal', label: 'Minimal', icon: LucideSparkles, color: 'rose400' },
+    { id: 'bohemian', label: 'Bohemian', icon: LucidePartyPopper, color: 'orange400' },
+    { id: 'classic', label: 'Classic', icon: LucideGlasses, color: 'green400' },
   ];
 
-  // Tallas disponibles
-  const shirtSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
-  const pantsSizes = ['28', '30', '32', '34', '36', '38', '40'];
-  const shoeSizes = ['6', '7', '8', '9', '10', '11', '12', '13'];
-
   // Alternar selección de estilo
-  const toggleStyle = (styleId) => {
+  const handleStyleToggle = (styleId) => {
     setFormData(prev => ({
       ...prev,
       preferredStyles: prev.preferredStyles.includes(styleId)
@@ -73,255 +170,353 @@ const SignupStepTwo = ({ onBack, onComplete, onSkip }) => {
     onComplete && onComplete(formData);
   };
 
-  // Componente de botón de talla
-  const SizeButton = ({ size, selectedSize, onSelect }) => {
-    const isSelected = selectedSize === size;
-    return (
-      <TouchableOpacity
-        onPress={() => onSelect(size)}
-        style={{
-          paddingHorizontal: 16,
-          paddingVertical: 8,
-          borderRadius: 8,
-          borderWidth: 2,
-          borderColor: isSelected ? theme.colors.primary : theme.colors.gray300,
-          backgroundColor: isSelected ? theme.colors.primary : theme.colors.background,
-          marginRight: 8,
-          marginBottom: 8,
-        }}
-      >
-        <Text 
-          variant="body" 
-          color={isSelected ? 'primaryForeground' : 'foreground'}
-          textAlign="center"
-        >
-          {size}
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-
-  // Componente de opción de estilo
-  const StyleOption = ({ style }) => {
-    const isSelected = formData.preferredStyles.includes(style.id);
-    const Icon = style.icon;
-    
-    return (
-      <TouchableOpacity
-        onPress={() => toggleStyle(style.id)}
-        style={{
-          flex: 1,
-          margin: 6,
-          padding: 16,
-          borderRadius: 12,
-          borderWidth: 2,
-          borderColor: isSelected ? theme.colors.primary : theme.colors.gray300,
-          backgroundColor: isSelected ? theme.colors.primaryMuted : theme.colors.background,
-          alignItems: 'center',
-          minHeight: 80,
-        }}
-      >
-        <Icon size={24} color={isSelected ? theme.colors.primary : theme.colors.foreground} />
-        <Text 
-          variant="body" 
-          color={isSelected ? 'primary' : 'foreground'}
-          marginTop="xs"
-          textAlign="center"
-        >
-          {style.name}
-        </Text>
-        {isSelected && (
-          <Box
-            position="absolute"
-            top={8}
-            right={8}
-            width={20}
-            height={20}
-            borderRadius="full"
-            backgroundColor="primary"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Check size={12} color={theme.colors.primaryForeground} />
-          </Box>
-        )}
-      </TouchableOpacity>
-    );
-  };
-
   return (
     <Box flex={1} backgroundColor="background">
-      {/* Header con progreso */}
+      <StatusBar style={isDark ? 'light' : 'dark'} />
+      
+      {/* Elementos decorativos de fondo (estilo referencia con tema púrpura) */}
       <Box 
-        flexDirection="row" 
-        alignItems="center" 
-        paddingHorizontal="lg" 
-        paddingTop="xl"
-        paddingBottom="md"
-      >
-        <TouchableOpacity onPress={onBack}>
-          <ArrowLeft size={24} color={theme.colors.foreground} />
-        </TouchableOpacity>
-        <Box flex={1} alignItems="center">
-          <Text variant="header">Personaliza tu experiencia</Text>
-          <Text variant="caption" color="muted" marginTop="xs">
-            Paso 2 de 2 · Opcional pero recomendado
-          </Text>
-        </Box>
-      </Box>
+        position="absolute"
+        top={40}
+        right={40}
+        width={128}
+        height={128}
+        borderRadius="full"
+        backgroundColor="purple100"
+        opacity={0.3}
+        style={{
+          shadowColor: theme.colors.purple100,
+          shadowOffset: { width: 0, height: 0 },
+          shadowOpacity: 0.5,
+          shadowRadius: 40,
+          elevation: 0,
+        }}
+      />
+      <Box 
+        position="absolute"
+        bottom={80}
+        left={40}
+        width={160}
+        height={160}
+        borderRadius="full"
+        backgroundColor="indigo100"
+        opacity={0.3}
+        style={{
+          shadowColor: theme.colors.blue100,
+          shadowOffset: { width: 0, height: 0 },
+          shadowOpacity: 0.5,
+          shadowRadius: 40,
+          elevation: 0,
+        }}
+      />
 
+      {/* Header con botón de regreso */}
+      <Box 
+        paddingTop="xl" 
+        paddingHorizontal="lg" 
+        marginBottom="md"
+      >
+        <TouchableOpacity
+          onPress={onBack}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: 16,
+          }}
+        >
+          <LucideArrowLeft size={20} color={theme.colors.muted} />
+          <Text 
+            variant="caption" 
+            color="muted" 
+            style={{ marginLeft: 8, fontSize: 14 }}
+          >
+            Back
+          </Text>
+        </TouchableOpacity>
+      </Box>
+      
       <ScrollView 
-        style={{ flex: 1 }} 
-        contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 40 }}
+        style={{ flex: 1 }}
+        contentContainerStyle={{ 
+          flexGrow: 1,
+          paddingHorizontal: 32,
+          paddingBottom: 32,
+        }}
+        keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        {/* Icono y título principal */}
-        <Box alignItems="center" marginBottom="xl">
-          <Box
-            width={64}
-            height={64}
-            borderRadius="full"
-            backgroundColor="primary"
-            alignItems="center"
-            justifyContent="center"
-            marginBottom="md"
-          >
-            <Sparkles size={32} color={theme.colors.primaryForeground} />
-          </Box>
-        </Box>
+        <Box maxWidth={400} alignSelf="center" width="100%">
+          {/* Logo */}
+          <LookitLogo />
 
-        {/* Estilos preferidos */}
-        <Card marginBottom="lg">
-          <Label text="¿Cuál es tu estilo?" />
-          <Text variant="caption" color="muted" marginTop="xs" marginBottom="md">
-            Selecciona todos los que apliquen
-          </Text>
-          
-          <Box flexDirection="row" flexWrap="wrap" justifyContent="space-between">
-            {styleOptions.map((style, index) => (
-              <Box key={style.id} width="48%" marginBottom="sm">
-                <StyleOption style={style} />
+          {/* Preferred Styles (estilo referencia) */}
+          <Box marginBottom="lg">
+            <Label 
+              style={{ 
+                marginBottom: 12, 
+                fontSize: 14, 
+                color: theme.colors.foreground 
+              }}
+            >
+              What's your style? (Select all that apply)
+            </Label>
+            <Box flexDirection="row" flexWrap="wrap" justifyContent="space-between">
+              {styleOptions.map((style) => {
+                const IconComponent = style.icon;
+                const isSelected = formData.preferredStyles.includes(style.id);
+                return (
+                  <TouchableOpacity
+                    key={style.id}
+                    onPress={() => handleStyleToggle(style.id)}
+                    style={{
+                      width: '48%',
+                      marginBottom: 12,
+                      padding: 16,
+                      borderRadius: 12,
+                      borderWidth: 2,
+                      borderColor: isSelected 
+                        ? theme.colors.purple300 
+                        : (isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)'),
+                      backgroundColor: isSelected 
+                        ? theme.colors.purple50 
+                        : (isDark ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.8)'),
+                      alignItems: 'center',
+                      shadowColor: isSelected ? theme.colors.purple300 : 'transparent',
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: isSelected ? 0.2 : 0,
+                      shadowRadius: 4,
+                      elevation: isSelected ? 2 : 0,
+                    }}
+                  >
+                    <Box
+                      width={48}
+                      height={48}
+                      borderRadius="full"
+                      backgroundColor={style.color}
+                      alignItems="center"
+                      justifyContent="center"
+                      marginBottom="sm"
+                    >
+                      <IconComponent size={24} color="white" />
+                    </Box>
+                    <Text 
+                      style={{ 
+                        fontSize: 14,
+                        color: isSelected ? theme.colors.purple700 : theme.colors.muted,
+                        fontWeight: isSelected ? '500' : '400',
+                        textAlign: 'center'
+                      }}
+                    >
+                      {style.label}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </Box>
+          </Box>
+
+          {/* Sizes Section (estilo referencia) */}
+          <Box marginBottom="lg">
+            <Label 
+              style={{ 
+                marginBottom: 12, 
+                fontSize: 14, 
+                color: theme.colors.foreground 
+              }}
+            >
+              Your sizes (Optional)
+            </Label>
+            <Box flexDirection="row" justifyContent="space-between">
+              {/* Shirt Size */}
+              <Box flex={1} marginRight="sm">
+                <Label 
+                  style={{ 
+                    marginBottom: 8, 
+                    fontSize: 12, 
+                    color: theme.colors.muted 
+                  }}
+                >
+                  Shirt
+                </Label>
+                <Input
+                  placeholder="S/M/L"
+                  value={formData.shirtSize}
+                  onChangeText={(value) => updateField('shirtSize', value.toUpperCase())}
+                  style={{
+                    height: 44,
+                    backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.8)',
+                    borderColor: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)',
+                    borderRadius: 12,
+                    paddingHorizontal: 16,
+                    fontSize: 16,
+                    borderWidth: 1,
+                    textAlign: 'center',
+                  }}
+                />
               </Box>
-            ))}
-          </Box>
-        </Card>
 
-        {/* Tallas */}
-        <Card marginBottom="lg">
-          <Label text="Tus tallas" />
-          <Text variant="caption" color="muted" marginTop="xs" marginBottom="md">
-            Ayúdanos a recomendarte el ajuste perfecto
-          </Text>
-          
-          {/* Talla de camisa */}
-          <Box marginBottom="md">
-            <Text variant="body" color="muted" marginBottom="sm">Camisa</Text>
-            <Box flexDirection="row" flexWrap="wrap">
-              {shirtSizes.map((size) => (
-                <SizeButton
-                  key={size}
-                  size={size}
-                  selectedSize={formData.shirtSize}
-                  onSelect={(size) => updateField('shirtSize', size)}
+              {/* Pants Size */}
+              <Box flex={1} marginHorizontal="sm">
+                <Label 
+                  style={{ 
+                    marginBottom: 8, 
+                    fontSize: 12, 
+                    color: theme.colors.muted 
+                  }}
+                >
+                  Pants
+                </Label>
+                <Input
+                  placeholder="30/32"
+                  value={formData.pantsSize}
+                  onChangeText={(value) => updateField('pantsSize', value)}
+                  style={{
+                    height: 44,
+                    backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.8)',
+                    borderColor: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)',
+                    borderRadius: 12,
+                    paddingHorizontal: 16,
+                    fontSize: 16,
+                    borderWidth: 1,
+                    textAlign: 'center',
+                  }}
                 />
-              ))}
-            </Box>
-          </Box>
+              </Box>
 
-          {/* Talla de pantalón */}
-          <Box marginBottom="md">
-            <Text variant="body" color="muted" marginBottom="sm">Pantalón (cintura)</Text>
-            <Box flexDirection="row" flexWrap="wrap">
-              {pantsSizes.map((size) => (
-                <SizeButton
-                  key={size}
-                  size={size}
-                  selectedSize={formData.pantsSize}
-                  onSelect={(size) => updateField('pantsSize', size)}
-                />
-              ))}
-            </Box>
-          </Box>
-
-          {/* Talla de zapatos */}
-          <Box>
-            <Text variant="body" color="muted" marginBottom="sm">Zapatos (US)</Text>
-            <Box flexDirection="row" flexWrap="wrap">
-              {shoeSizes.map((size) => (
-                <SizeButton
-                  key={size}
-                  size={size}
-                  selectedSize={formData.shoeSize}
-                  onSelect={(size) => updateField('shoeSize', size)}
-                />
-              ))}
-            </Box>
-          </Box>
-        </Card>
-
-        {/* Fecha de nacimiento */}
-        <Card marginBottom="lg">
-          <Box flexDirection="row" alignItems="flex-start" marginBottom="sm">
-            <Calendar size={20} color={theme.colors.primary} />
-            <Box flex={1} marginLeft="sm">
-              <Label text="Fecha de nacimiento" />
-              <Text variant="caption" color="muted" marginTop="xs">
-                Recibe sorpresas especiales de cumpleaños y recomendaciones
-              </Text>
-            </Box>
-          </Box>
-          
-          <Input
-            placeholder="DD/MM/AAAA"
-            value={formData.birthday}
-            onChangeText={(value) => updateField('birthday', value)}
-            keyboardType="numeric"
-          />
-        </Card>
-
-        {/* Login biométrico */}
-        <Card marginBottom="xl">
-          <Box flexDirection="row" alignItems="center" justifyContent="space-between">
-            <Box flexDirection="row" alignItems="flex-start" flex={1}>
-              <Fingerprint size={20} color={theme.colors.primary} />
+              {/* Shoe Size */}
               <Box flex={1} marginLeft="sm">
-                <Label text="Login biométrico" />
-                <Text variant="caption" color="muted" marginTop="xs">
-                  Usa huella digital o Face ID para acceso rápido
-                </Text>
+                <Label 
+                  style={{ 
+                    marginBottom: 8, 
+                    fontSize: 12, 
+                    color: theme.colors.muted 
+                  }}
+                >
+                  Shoes
+                </Label>
+                <Input
+                  placeholder="9/10"
+                  value={formData.shoeSize}
+                  onChangeText={(value) => updateField('shoeSize', value)}
+                  style={{
+                    height: 44,
+                    backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.8)',
+                    borderColor: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)',
+                    borderRadius: 12,
+                    paddingHorizontal: 16,
+                    fontSize: 16,
+                    borderWidth: 1,
+                    textAlign: 'center',
+                  }}
+                />
               </Box>
             </Box>
-            <Switch
-              checked={formData.biometricEnabled}
-              onCheckedChange={(checked) => updateField('biometricEnabled', checked)}
+          </Box>
+
+          {/* Birthday (estilo referencia) */}
+          <Box marginBottom="lg">
+            <Label 
+              style={{ 
+                marginBottom: 8, 
+                fontSize: 14, 
+                color: theme.colors.foreground 
+              }}
+            >
+              Birthday (Optional) <Text variant="caption" color="muted" style={{ fontSize: 12 }}>— for personalized recommendations</Text>
+            </Label>
+            <Input
+              placeholder="MM/DD/YYYY"
+              value={formData.birthday}
+              onChangeText={(value) => updateField('birthday', value)}
+              style={{
+                height: 44,
+                backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.8)',
+                borderColor: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)',
+                borderRadius: 12,
+                paddingHorizontal: 16,
+                fontSize: 16,
+                borderWidth: 1,
+              }}
             />
           </Box>
-        </Card>
 
-        {/* Botones de acción */}
-        <Box gap="md">
-          <Button
-            variant="primary"
-            onPress={handleComplete}
+          {/* Biometric Login (estilo referencia) */}
+          <Card
+            style={{
+              padding: 16,
+              backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.8)',
+              borderColor: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)',
+              borderRadius: 12,
+              borderWidth: 1,
+              marginBottom: 24,
+            }}
           >
-            <Box flexDirection="row" alignItems="center" justifyContent="center">
-              <Text variant="button">Comenzar a usar Lookit</Text>
-              <ArrowRight size={20} color={theme.colors.primaryForeground} />
+            <Box flexDirection="row" alignItems="center" justifyContent="space-between">
+              <Box flex={1} paddingRight="md">
+                <Text 
+                  style={{ 
+                    fontSize: 14, 
+                    color: theme.colors.foreground,
+                    fontWeight: '500',
+                    marginBottom: 4
+                  }}
+                >
+                  Enable biometric login
+                </Text>
+                <Text variant="caption" color="muted" style={{ fontSize: 12 }}>
+                  Use Face ID or fingerprint to sign in
+                </Text>
+              </Box>
+              <Switch
+                value={formData.biometricEnabled}
+                onValueChange={(value) => updateField('biometricEnabled', value)}
+                trackColor={{ 
+                  false: theme.colors.gray300, 
+                  true: theme.colors.purple300 
+                }}
+                thumbColor={formData.biometricEnabled ? theme.colors.purple500 : theme.colors.gray500}
+              />
             </Box>
-          </Button>
+          </Card>
 
-          <TouchableOpacity onPress={onSkip}>
-            <Text variant="body" color="muted" textAlign="center" paddingVertical="md">
-              Omitir por ahora
-            </Text>
-          </TouchableOpacity>
-        </Box>
-
-        {/* Mensaje informativo */}
-        <Box alignItems="center" marginTop="md">
-          <Text variant="caption" color="muted" textAlign="center" paddingHorizontal="lg">
-            Siempre puedes actualizar estas preferencias más tarde en la configuración de tu perfil
-          </Text>
+          {/* Action buttons (estilo referencia) */}
+          <Box>
+            <Button
+              onPress={handleComplete}
+              style={{
+                height: 48,
+                backgroundColor: theme.colors.purple400,
+                borderRadius: 12,
+                shadowColor: theme.colors.purple400,
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.3,
+                shadowRadius: 8,
+                elevation: 8,
+                marginBottom: 12,
+              }}
+            >
+              <Text 
+                style={{ 
+                  color: 'white', 
+                  fontSize: 16, 
+                  fontWeight: '500' 
+                }}
+              >
+                Start using Lookit
+              </Text>
+            </Button>
+            
+            <TouchableOpacity onPress={onSkip} style={{ alignItems: 'center', paddingVertical: 8 }}>
+              <Text 
+                style={{ 
+                  fontSize: 14, 
+                  color: theme.colors.muted,
+                }}
+              >
+                Skip for now
+              </Text>
+            </TouchableOpacity>
+          </Box>
         </Box>
       </ScrollView>
     </Box>
