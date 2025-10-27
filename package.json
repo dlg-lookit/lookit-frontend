@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@shopify/restyle": "^2.4.5",
+    "dotenv": "^17.2.3",
     "expo": "~54.0.13",
     "expo-status-bar": "~3.0.8",
     "lucide-react-native": "^0.545.0",

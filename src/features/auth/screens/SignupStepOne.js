@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Box, Text, useTheme } from '../../../theme';
@@ -11,6 +11,7 @@ import {
   RadioGroup 
 } from '../../../components';
 import { LucideArrowLeft, LucideEye, LucideEyeOff } from '../../../components/LucideIcons';
+import { useAuth } from '../../../hooks/useAuth';
 
 // Componente Logo de Lookit (estilo SignupStepOne referencia)
 const LookitLogo = () => {
@@ -121,6 +122,9 @@ const SignupStepOne = ({ onBack, onNext }) => {
   const theme = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   
+  // Hook de autenticación
+  const { register, loading, error, clearError, validateEmail, validatePassword } = useAuth();
+  
   // Estados del formulario (siguiendo la referencia)
   const [formData, setFormData] = useState({
     email: '',
@@ -134,6 +138,14 @@ const SignupStepOne = ({ onBack, onNext }) => {
   // Estados de validación
   const [errors, setErrors] = useState({});
 
+  // Limpiar errores de la API cuando el usuario empiece a escribir
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => clearError(), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [error, clearError]);
+
   // Opciones para el género (siguiendo la referencia)
   const genderOptions = [
     { label: 'Male', value: 'male' },
@@ -141,26 +153,33 @@ const SignupStepOne = ({ onBack, onNext }) => {
     { label: 'Other', value: 'other' },
   ];
 
-  // Función de validación
+  // Función de validación mejorada
   const validateForm = () => {
     const newErrors = {};
 
+    // Validar email con el servicio
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+    } else if (!validateEmail(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
     }
 
+    // Validar contraseña con el servicio
     if (!formData.password.trim()) {
       newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+    } else {
+      const passwordValidation = validatePassword(formData.password);
+      if (!passwordValidation.isValid) {
+        newErrors.password = 'Password must be at least 6 characters long';
+      }
     }
 
     if (!formData.username.trim()) {
       newErrors.username = 'Username is required';
     } else if (formData.username.length < 3) {
       newErrors.username = 'Username must be at least 3 characters';
+    } else if (!/^[a-zA-Z0-9_]+$/.test(formData.username)) {
+      newErrors.username = 'Username can only contain letters, numbers, and underscores';
     }
 
     if (!formData.displayName.trim()) {
@@ -186,12 +205,60 @@ const SignupStepOne = ({ onBack, onNext }) => {
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: undefined }));
     }
+    // Limpiar errores de la API
+    if (error) {
+      clearError();
+    }
   };
 
-  // Función para manejar el envío
-  const handleSubmit = () => {
-    if (validateForm()) {
-      onNext(formData);
+  // Función para manejar el envío con registro en API
+  const handleSubmit = async () => {
+    // Primero validar el formulario
+    if (!validateForm()) {
+      return;
+    }
+
+    try {
+      // Intentar registrar el usuario en la API
+      const result = await register({
+        email: formData.email,
+        password: formData.password,
+        username: formData.username,
+      });
+
+      if (result.success) {
+        // Si el registro es exitoso, mostrar mensaje y continuar al siguiente paso
+        Alert.alert(
+          'Success!',
+          result.message || 'Account created successfully!',
+          [
+            {
+              text: 'Continue',
+              onPress: () => {
+                // Pasar todos los datos del formulario al siguiente paso
+                onNext({
+                  ...formData,
+                  apiData: result.data, // Incluir datos de la API
+                });
+              }
+            }
+          ]
+        );
+      } else {
+        // Mostrar error específico de la API
+        Alert.alert(
+          'Registration Failed',
+          result.error || 'Please try again.',
+          [{ text: 'OK' }]
+        );
+      }
+    } catch (err) {
+      // Error inesperado
+      Alert.alert(
+        'Error',
+        'An unexpected error occurred. Please try again.',
+        [{ text: 'OK' }]
+      );
     }
   };
 
@@ -512,19 +579,43 @@ const SignupStepOne = ({ onBack, onNext }) => {
               </Box>
             </Box>
 
+            {/* Error de la API */}
+            {error && (
+              <Box 
+                backgroundColor="red50"
+                borderColor="red200"
+                borderWidth={1}
+                borderRadius="lg"
+                padding="md"
+                marginTop="md"
+              >
+                <Text 
+                  style={{ 
+                    color: theme.colors.red600,
+                    fontSize: 14,
+                    textAlign: 'center'
+                  }}
+                >
+                  {error}
+                </Text>
+              </Box>
+            )}
+
             {/* Next Button (estilo referencia) */}
             <Button
               onPress={handleSubmit}
+              disabled={loading}
               style={{
                 height: 48,
-                backgroundColor: theme.colors.rose400,
+                backgroundColor: loading ? theme.colors.gray400 : theme.colors.rose400,
                 borderRadius: 12,
-                shadowColor: theme.colors.rose400,
+                shadowColor: loading ? 'transparent' : theme.colors.rose400,
                 shadowOffset: { width: 0, height: 4 },
-                shadowOpacity: 0.3,
+                shadowOpacity: loading ? 0 : 0.3,
                 shadowRadius: 8,
-                elevation: 8,
-                marginTop: 8,
+                elevation: loading ? 0 : 8,
+                marginTop: 16,
+                opacity: loading ? 0.7 : 1,
               }}
             >
               <Text 
@@ -534,7 +625,7 @@ const SignupStepOne = ({ onBack, onNext }) => {
                   fontWeight: '500' 
                 }}
               >
-                Next
+                {loading ? 'Creating Account...' : 'Next'}
               </Text>
             </Button>
           </Box>

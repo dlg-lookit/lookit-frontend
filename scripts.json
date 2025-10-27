@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "start": "expo start",
+    "start:mobile": "cp .env.mobile .env && expo start",
+    "start:web": "cp .env.web .env && expo start --web",
+    "start:clear": "expo start --clear",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "test": "jest",
+    "test:api": "node tests/api.test.js"
+  }
+}
