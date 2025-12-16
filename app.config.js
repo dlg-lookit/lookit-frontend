@@ -34,6 +34,8 @@ export default {
       EXPO_PUBLIC_NODE_ENV: process.env.EXPO_PUBLIC_NODE_ENV || 'development',
       EXPO_PUBLIC_APP_NAME: process.env.EXPO_PUBLIC_APP_NAME || 'Lookit',
       EXPO_PUBLIC_APP_VERSION: process.env.EXPO_PUBLIC_APP_VERSION || '1.0.0',
+      // Backend Atenea (generación de outfits)
+      EXPO_PUBLIC_BASE_URL_ATENEA: process.env.EXPO_PUBLIC_BASE_URL_ATENEA || 'http://127.0.0.1:3001',
     }
   },
 };

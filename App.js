@@ -6,6 +6,7 @@ import SignupStepOne from './src/features/auth/screens/SignupStepOne';
 import SignupStepTwo from './src/features/auth/screens/SignupStepTwo';
 import HomeScreen from './src/features/home/screens/HomeScreen';
 import OutfitSuggestionsScreen from './src/features/outfit/screens/OutfitSuggestionsScreen';
+import TryOnScreen from './src/features/outfit/screens/TryOnScreen';
 import PersonalStatsScreen from './src/features/stats/screens/PersonalStatsScreen';
 import WardrobeScreen from './src/features/wardrobe/screens/WardrobeScreen';
 import StyleProfileScreen from './src/features/profile/screens/StyleProfileScreen';
@@ -87,7 +88,7 @@ function MainApp() {
 
   const handleHomeNavigation = (destination) => {
     // Navegar a diferentes pantallas
-    if (destination === 'home' || destination === 'suggestions' || destination === 'wardrobe' || destination === 'stats' || destination === 'profile') {
+    if (destination === 'home' || destination === 'suggestions' || destination === 'wardrobe' || destination === 'stats' || destination === 'profile' || destination === 'try-on') {
       setCurrentScreen(destination);
     } else {
       // Para otras navegaciones, mostrar demo
@@ -148,6 +149,14 @@ function MainApp() {
         user={user}
         onNavigate={handleHomeNavigation}
         onLogout={handleLogout}
+      />
+    );
+  }
+
+  if (currentScreen === 'try-on' && user) {
+    return (
+      <TryOnScreen 
+        onNavigate={handleHomeNavigation}
       />
     );
   }

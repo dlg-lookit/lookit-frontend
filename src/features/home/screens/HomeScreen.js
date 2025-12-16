@@ -50,6 +50,10 @@ const HomeScreen = ({ user, onNavigate }) => {
     onNavigate && onNavigate('wardrobe');
   };
 
+  const handleTryOn = () => {
+    onNavigate && onNavigate('try-on');
+  };
+
   const handleTabChange = (tab) => {
     onNavigate && onNavigate(tab);
   };
@@ -109,6 +113,37 @@ const HomeScreen = ({ user, onNavigate }) => {
               </Box>
               <Text variant="subheader" color="primaryForeground">
                 Vísteme hoy
+              </Text>
+            </Box>
+          </Button>
+
+          {/* Botón Try On debajo */}
+          <Button
+            variant="secondary"
+            onPress={handleTryOn}
+            style={{
+              height: 56,
+              borderRadius: 16,
+              marginTop: 12,
+              borderWidth: 1,
+              borderColor: theme.colors.gray300,
+            }}
+          >
+            <Box flexDirection="row" alignItems="center" justifyContent="center">
+              <Box
+                width={28}
+                height={28}
+                borderRadius="full"
+                backgroundColor="secondary"
+                alignItems="center"
+                justifyContent="center"
+                marginRight="sm"
+                opacity={0.2}
+              >
+                <Shirt size={18} color={theme.colors.foreground} />
+              </Box>
+              <Text variant="body" color="foreground">
+                Probarme ropa (Try On)
               </Text>
             </Box>
           </Button>

@@ -1,5 +1,6 @@
-// Home screen (clima + botón "Dress Me")
-import { Text, View, StyleSheet } from 'react-native';
+// Home screen (clima + botón "Vísteme hoy" + Try On)
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { router } from 'expo-router';
 
 export default function HomeScreen() {
   return (
@@ -13,9 +14,14 @@ export default function HomeScreen() {
       </View>
       
       {/* Botón principal */}
-      <View style={styles.buttonContainer}>
-        <Text style={styles.button}>👗 Dress Me</Text>
-      </View>
+      <TouchableOpacity style={styles.primaryButton} onPress={() => {}}>
+        <Text style={styles.primaryButtonText}>👗 Vísteme hoy</Text>
+      </TouchableOpacity>
+
+      {/* Botón Try On */}
+      <TouchableOpacity style={styles.secondaryButton} onPress={() => router.push('/try-on')}>
+        <Text style={styles.secondaryButtonText}>Probarme ropa (Try On)</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -54,15 +60,31 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
   },
-  buttonContainer: {
-    backgroundColor: '#007AFF',
+  primaryButton: {
+    backgroundColor: '#111',
     paddingHorizontal: 40,
     paddingVertical: 15,
     borderRadius: 25,
+    marginTop: 12,
   },
-  button: {
+  primaryButtonText: {
     color: '#fff',
     fontSize: 18,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  secondaryButton: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    paddingHorizontal: 40,
+    paddingVertical: 15,
+    borderRadius: 25,
+    marginTop: 12,
+  },
+  secondaryButtonText: {
+    color: '#111',
+    fontSize: 16,
     fontWeight: '600',
     textAlign: 'center',
   },
