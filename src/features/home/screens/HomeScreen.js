@@ -11,7 +11,8 @@ import {
   Sun, 
   Cloud, 
   Shirt,
-  ArrowRight 
+  ArrowRight,
+  Sparkles,
 } from '../../../components/Icons';
 
 const { width } = Dimensions.get('window');
@@ -83,70 +84,77 @@ const HomeScreen = ({ user, onNavigate }) => {
             </Box>
           </Box>
 
-          {/* Botón CTA principal */}
-          <Button
-            variant="primary"
-            onPress={handleDressMeToday}
-            style={{
-              height: 64,
-              borderRadius: 16,
-              backgroundColor: theme.colors.primary,
-              shadowColor: theme.colors.foreground,
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.2,
-              shadowRadius: 8,
-              elevation: 8,
-            }}
-          >
-            <Box flexDirection="row" alignItems="center" justifyContent="center">
+          {/* Botón CTA principal: Dress me today */}
+          <TouchableOpacity activeOpacity={0.85} onPress={handleDressMeToday}>
+            <Box
+              height={64}
+              borderRadius="xl"
+              paddingHorizontal="lg"
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="center"
+              marginBottom="sm"
+              style={{
+                backgroundColor: '#fb7185', // similar a from-rose-400 to-pink-400
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.25,
+                shadowRadius: 8,
+                elevation: 8,
+              }}
+            >
               <Box
                 width={32}
                 height={32}
                 borderRadius="full"
-                backgroundColor="primaryForeground"
                 alignItems="center"
                 justifyContent="center"
                 marginRight="sm"
-                opacity={0.2}
+                style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
               >
-                <Shirt size={20} color={theme.colors.primary} />
+                <Shirt size={20} color="#ffffff" />
               </Box>
-              <Text variant="subheader" color="primaryForeground">
-                Vísteme hoy
+              <Text variant="subheader" style={{ color: '#ffffff' }}>
+                Dress me today
               </Text>
             </Box>
-          </Button>
+          </TouchableOpacity>
 
-          {/* Botón Try On debajo */}
-          <Button
-            variant="secondary"
-            onPress={handleTryOn}
-            style={{
-              height: 56,
-              borderRadius: 16,
-              marginTop: 12,
-              borderWidth: 1,
-              borderColor: theme.colors.gray300,
-            }}
-          >
-            <Box flexDirection="row" alignItems="center" justifyContent="center">
+          {/* Botón Try On debajo: Virtual Try-On */}
+          <TouchableOpacity activeOpacity={0.85} onPress={handleTryOn}>
+            <Box
+              height={56}
+              borderRadius="xl"
+              paddingHorizontal="lg"
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="center"
+              marginTop="sm"
+              style={{
+                backgroundColor: '#a855f7', // similar a from-purple-400 to-indigo-400
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.2,
+                shadowRadius: 6,
+                elevation: 6,
+              }}
+            >
               <Box
                 width={28}
                 height={28}
                 borderRadius="full"
-                backgroundColor="secondary"
                 alignItems="center"
                 justifyContent="center"
                 marginRight="sm"
-                opacity={0.2}
+                style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
               >
-                <Shirt size={18} color={theme.colors.foreground} />
+                <Sparkles size={18} color="#ffffff" />
               </Box>
-              <Text variant="body" color="foreground">
-                Probarme ropa (Try On)
+              <Text variant="body" style={{ color: '#ffffff', fontWeight: '600' }}>
+                Virtual Try-On
               </Text>
             </Box>
-          </Button>
+          </TouchableOpacity>
         </Box>
 
         {/* Contenido principal */}

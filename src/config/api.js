@@ -50,6 +50,9 @@ const ATENEA_CONFIG = {
   ENDPOINTS: {
     GENERATE_OUTFIT_URL: '/generate-outfit-url',
     GENERATE_OUTFIT_LOCAL: '/generate-outfit-local',
+    // Nuevo endpoint: persona + hasta 6 prendas
+    // Ajusta la ruta si tu backend usa otra
+    GENERATE_OUTFIT_MULTI: '/generate-outfit-multi',
   },
 };
 

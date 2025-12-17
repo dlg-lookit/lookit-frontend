@@ -106,6 +106,13 @@ class AteneaService {
       body: formData,
     });
   }
+
+  async generateOutfitFromMulti(formData) {
+    return this.request(ATENEA_CONFIG.ENDPOINTS.GENERATE_OUTFIT_MULTI, {
+      method: 'POST',
+      body: formData,
+    });
+  }
 }
 
 const ateneaService = new AteneaService();
