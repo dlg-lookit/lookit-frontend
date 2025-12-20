@@ -17,7 +17,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system/legacy';
 import { Asset } from 'expo-asset';
 import * as MediaLibrary from 'expo-media-library';
-import * as ImageManipulator from 'expo-image-manipulator';
+import * as Permissions from 'expo-permissions';
 import { ATENEA_CONFIG } from '../../../config/api';
 import ateneaService from '../../../services/ateneaService';
 
@@ -69,36 +69,51 @@ const TryOnScreen = ({ onNavigate }) => {
   ).length;
 
   const pickImage = async (setter) => {
-    const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!perm.granted) {
-      Alert.alert('Permisos', 'Se requiere permiso para acceder a tus imágenes.');
-      return;
-    }
-    const mediaTypes = ImagePicker.MediaType
-      ? [ImagePicker.MediaType.Image]
-      : ImagePicker.MediaTypeOptions.Images; // fallback for older SDKs
-    const res = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes,
-      quality: 1,
-    });
-    if (!res.canceled && res.assets?.[0]?.uri) {
-      let selectedUri = res.assets[0].uri;
+    try {
+      console.log('[TryOn] Requesting media library permissions...');
+      const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      console.log('[TryOn] Permissions result:', perm);
 
-      // En iOS, muchas fotos son HEIC; las convertimos a JPEG para el backend
-      if (Platform.OS === 'ios') {
-        try {
-          const manipulated = await ImageManipulator.manipulateAsync(
-            selectedUri,
-            [],
-            { compress: 1, format: ImageManipulator.SaveFormat.JPEG },
-          );
-          selectedUri = manipulated.uri;
-        } catch (err) {
-          console.log('[TryOn] Image manipulation failed, using original uri', err);
-        }
+      if (!perm.granted) {
+        Alert.alert('Permisos', 'Se requiere permiso para acceder a tus imágenes.');
+        return;
       }
 
-      setter(selectedUri);
+      console.log('[TryOn] Launching image library...');
+      const res = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: 'images',
+        quality: 1,
+        allowsEditing: false,
+        aspect: undefined,
+      });
+
+      console.log('[TryOn] Image picker result:', res);
+
+      if (!res.canceled && res.assets?.[0]?.uri) {
+        let selectedUri = res.assets[0].uri;
+        console.log('[TryOn] Selected image URI:', selectedUri);
+
+        // En iOS, muchas fotos son HEIC; las convertimos a JPEG para el backend
+        if (Platform.OS === 'ios') {
+          try {
+            const manipulated = await ImageManipulator.manipulateAsync(
+              selectedUri,
+              [],
+              { compress: 1, format: ImageManipulator.SaveFormat.JPEG },
+            );
+            selectedUri = manipulated.uri;
+          } catch (err) {
+            console.log('[TryOn] Image manipulation failed, using original uri', err);
+          }
+        }
+
+        setter(selectedUri);
+      } else {
+        console.log('[TryOn] Image selection was canceled or no asset selected');
+      }
+    } catch (error) {
+      console.error('[TryOn] Error picking image:', error);
+      Alert.alert('Error', `No se pudo seleccionar la imagen: ${error.message}`);
     }
   };
 
@@ -177,39 +192,48 @@ const TryOnScreen = ({ onNavigate }) => {
     }
 
     try {
-      const { status } = await MediaLibrary.requestPermissionsAsync();
+      // Solicitar permisos específicos para media library usando expo-permissions
+      const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
       if (status !== 'granted') {
         Alert.alert('Permiso requerido', 'Activa el permiso de fotos/almacenamiento para guardar la imagen.');
-        console.log('[TryOn] MediaLibrary permission not granted');
+        console.log('[TryOn] Media library permission not granted');
         return;
       }
+
+      console.log('[TryOn] Media library permissions granted');
 
       const asset = await MediaLibrary.createAssetAsync(outputUri);
 
       if (Platform.OS === 'android') {
         try {
-          let album = await MediaLibrary.getAlbumAsync('Download');
+          // Intentar guardar en un álbum propio para que sea más visible en la galería
+          const albumName = 'Lookit';
+          let album = await MediaLibrary.getAlbumAsync(albumName);
           if (!album) {
-            album = await MediaLibrary.getAlbumAsync('Downloads');
-          }
-          if (!album) {
-            album = await MediaLibrary.createAlbumAsync('Download', asset, false);
+            album = await MediaLibrary.createAlbumAsync(albumName, asset, false);
           } else {
-            await MediaLibrary.addAssetsToAlbumAsync([asset], album.id, false);
+            await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
           }
-          console.log('[TryOn] Image added to Downloads album on Android (via button)');
+          console.log('[TryOn] Image saved to Android album', {
+            album: albumName,
+            uri: asset.uri,
+          });
         } catch (albumError) {
-          console.log('[TryOn] Error handling Downloads album', albumError);
+          console.log('[TryOn] Android album error, fallback to saveToLibraryAsync', albumError);
+          await MediaLibrary.saveToLibraryAsync(asset.uri || outputUri);
         }
       } else {
-        await MediaLibrary.saveToLibraryAsync(outputUri);
-        console.log('[TryOn] Image saved to Photos library on iOS (via button)');
+        await MediaLibrary.saveToLibraryAsync(asset.uri || outputUri);
+        console.log('[TryOn] Image saved to media library (iOS)', {
+          uri: asset.uri || outputUri,
+        });
       }
 
       Alert.alert('Guardado', 'La imagen se ha guardado en tu galería.');
     } catch (mlError) {
       console.log('[TryOn] MediaLibrary error', mlError);
-      Alert.alert('Error', 'No se pudo guardar la imagen.');
+      const message = mlError?.message || 'Error desconocido al guardar en la galería.';
+      Alert.alert('Error', `No se pudo guardar la imagen.\n\nDetalle: ${message}`);
     }
   };
 

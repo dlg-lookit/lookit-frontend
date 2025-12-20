@@ -2,13 +2,46 @@ import React, { useState } from 'react';
 import { ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { Box, Text, useTheme } from '../../../theme';
 import { Button, Badge, Card } from '../../../components';
-import { Edit3, Palette, Star, LogOut } from '../../../components/Icons';
+import { Edit3, Palette, Star, LogOut } from '../../../components/LucideIcons';
 import BottomNavigation from '../../../components/BottomNavigation';
 
+/**
+ * StyleProfileScreen Component
+ *
+ * TODO: This entire component is currently hardcoded and needs API integration
+ * All user data (style preferences, favorite colors, brands, quiz results) should come from:
+ * - GET /api/user/profile - for user style profile data
+ * - PUT /api/user/preferences - for updating user preferences
+ * - POST /api/user/style-quiz - for style quiz results
+ *
+ * Current hardcoded data should be replaced with:
+ * - user.styleProfile (from API)
+ * - user.preferences (from API)
+ * - Dynamic style options from API
+ *
+ * TODO: Add useEffect to load user data on component mount:
+ * useEffect(() => {
+ *   // Load user style profile from API
+ *   // Load user preferences from API
+ * }, []);
+ *
+ * TODO: Consider using global state management (Redux, Context, etc.) instead of local state
+ * for user preferences to maintain consistency across the app
+ *
+ * TODO: Add loading states and error handling for API calls:
+ * - Loading spinner while fetching user data
+ * - Error states for failed API requests
+ * - Retry mechanisms for failed requests
+ * - Offline support with cached data
+ */
 const StyleProfileScreen = ({ user, onNavigate, onLogout }) => {
   const theme = useTheme();
+  // TODO: Replace hardcoded selected styles with user data from API
+  // This should come from user.preferences.selectedStyles or similar API endpoint
   const [selectedStyles, setSelectedStyles] = useState(['Minimalist', 'Smart-Casual', 'Urban']);
   
+  // TODO: Replace hardcoded style preferences with dynamic data from API
+  // This should come from a styles/preferences API endpoint
   const stylePreferences = [
     { name: 'Minimalist', description: 'Clean lines & simple silhouettes' },
     { name: 'Smart-Casual', description: 'Polished yet relaxed' },
@@ -18,14 +51,18 @@ const StyleProfileScreen = ({ user, onNavigate, onLogout }) => {
     { name: 'Trendy', description: 'Fashion-forward & current' }
   ];
 
+  // TODO: Replace hardcoded favorite colors with user data from API
+  // This should come from user.preferences.favoriteColors API endpoint
   const favoriteColors = [
-    { color: theme.colors.foreground, name: 'Black' },
-    { color: theme.colors.background, name: 'White' },
+    { color: '#000000', name: 'Black' },
+    { color: '#FFFFFF', name: 'White' },
     { color: '#F5F5DC', name: 'Beige' },
     { color: '#8B7355', name: 'Brown' },
     { color: '#2F4F4F', name: 'Dark Slate' }
   ];
   
+  // TODO: Replace hardcoded favorite brands with user data from API
+  // This should come from user.preferences.favoriteBrands API endpoint
   const favoriteBrands = ['Zara', 'Uniqlo', 'COS', 'Everlane', 'Arket'];
 
   const toggleStyle = (styleName) => {
@@ -37,6 +74,8 @@ const StyleProfileScreen = ({ user, onNavigate, onLogout }) => {
   };
 
   const handleUpdateStyle = () => {
+    // TODO: Replace mock alert with actual API call to save user preferences
+    // Should call API endpoint like: PUT /api/user/preferences with selectedStyles
     Alert.alert(
       'Style Updated',
       'Your style preferences have been updated successfully!',
@@ -64,8 +103,8 @@ const StyleProfileScreen = ({ user, onNavigate, onLogout }) => {
         paddingHorizontal="lg" 
         paddingBottom="md"
         style={{
-          background: `linear-gradient(135deg, ${theme.colors.green50}, ${theme.colors.indigo50})`,
-          backgroundColor: theme.colors.green50,
+          background: `linear-gradient(135deg, ${theme.colors.emerald50 || theme.colors.green50}, ${theme.colors.teal50 || theme.colors.indigo50})`,
+          backgroundColor: theme.colors.emerald50 || theme.colors.green50,
         }}
       >
         <Box flexDirection="row" justifyContent="space-between" alignItems="center" marginBottom="lg">
@@ -95,6 +134,8 @@ const StyleProfileScreen = ({ user, onNavigate, onLogout }) => {
       >
         <Box style={{ gap: 24 }}>
           {/* Style Quiz Result */}
+          {/* TODO: Replace hardcoded style quiz result with user data from API */}
+          {/* This should come from user.styleProfile.quizResult or similar API endpoint */}
           <Card
             padding="xl"
             style={{
@@ -104,6 +145,7 @@ const StyleProfileScreen = ({ user, onNavigate, onLogout }) => {
               shadowOpacity: 0.1,
               shadowRadius: 8,
               elevation: 4,
+              borderRadius: 16,
             }}
           >
             <Box alignItems="center" marginBottom="lg">
@@ -115,15 +157,17 @@ const StyleProfileScreen = ({ user, onNavigate, onLogout }) => {
                 alignItems="center"
                 justifyContent="center"
                 style={{
-                  backgroundColor: theme.colors.green400,
-                  background: `linear-gradient(135deg, ${theme.colors.green400}, ${theme.colors.indigo400})`,
+                  backgroundColor: theme.colors.emerald400 || theme.colors.green400,
+                  background: `linear-gradient(135deg, ${theme.colors.emerald400 || theme.colors.green400}, ${theme.colors.teal400 || theme.colors.indigo400})`,
                 }}
               >
                 <Star size={40} color={theme.colors.primaryForeground} />
               </Box>
+              {/* TODO: Replace hardcoded "Modern Minimalist" with user.styleProfile.styleType from API */}
               <Text variant="subheader" color="foreground" marginBottom="sm" textAlign="center">
                 Modern Minimalist
               </Text>
+              {/* TODO: Replace hardcoded description with user.styleProfile.description from API */}
               <Text variant="caption" color="muted" textAlign="center">
                 Your style is characterized by clean lines, neutral colors, and thoughtful simplicity
               </Text>
@@ -140,6 +184,7 @@ const StyleProfileScreen = ({ user, onNavigate, onLogout }) => {
               shadowOpacity: 0.1,
               shadowRadius: 8,
               elevation: 4,
+              borderRadius: 16,
             }}
           >
             <Text variant="subheader" color="foreground" marginBottom="md">
@@ -166,12 +211,13 @@ const StyleProfileScreen = ({ user, onNavigate, onLogout }) => {
                       borderRadius="md"
                       borderWidth={2}
                       style={{
-                        borderColor: isSelected 
-                          ? theme.colors.green300 
+                        borderColor: isSelected
+                          ? (theme.colors.emerald300 || theme.colors.green300)
                           : theme.colors.border,
-                        backgroundColor: isSelected 
-                          ? theme.colors.green50 
+                        backgroundColor: isSelected
+                          ? (theme.colors.emerald50 || theme.colors.green50)
                           : theme.colors.gray50,
+                        borderRadius: 12,
                       }}
                     >
                       <Text 
@@ -179,7 +225,7 @@ const StyleProfileScreen = ({ user, onNavigate, onLogout }) => {
                         marginBottom="xs"
                         style={{
                           color: isSelected 
-                            ? theme.colors.green700 
+                            ? (theme.colors.emerald700 || theme.colors.green700) 
                             : theme.colors.muted,
                           fontWeight: '600'
                         }}
@@ -206,6 +252,7 @@ const StyleProfileScreen = ({ user, onNavigate, onLogout }) => {
               shadowOpacity: 0.1,
               shadowRadius: 8,
               elevation: 4,
+              borderRadius: 16,
             }}
           >
             <Box flexDirection="row" alignItems="center" marginBottom="md" style={{ gap: 8 }}>
@@ -249,6 +296,7 @@ const StyleProfileScreen = ({ user, onNavigate, onLogout }) => {
               shadowOpacity: 0.1,
               shadowRadius: 8,
               elevation: 4,
+              borderRadius: 16,
             }}
           >
             <Text variant="subheader" color="foreground" marginBottom="md">
@@ -259,14 +307,17 @@ const StyleProfileScreen = ({ user, onNavigate, onLogout }) => {
                 <TouchableOpacity key={index}>
                   <Badge
                     style={{
-                      backgroundColor: theme.colors.green100,
-                      borderColor: theme.colors.green200,
+                      backgroundColor: theme.colors.emerald100 || theme.colors.green100,
+                      borderColor: theme.colors.emerald200 || theme.colors.green200,
+                      borderRadius: 20,
+                      paddingHorizontal: 12,
+                      paddingVertical: 6,
                     }}
                   >
                     <Text
                       variant="caption"
                       style={{
-                        color: theme.colors.green700,
+                        color: theme.colors.emerald700 || theme.colors.green700,
                         fontWeight: '500'
                       }}
                     >
@@ -290,7 +341,8 @@ const StyleProfileScreen = ({ user, onNavigate, onLogout }) => {
         <TouchableOpacity
           onPress={handleUpdateStyle}
           style={{
-            backgroundColor: theme.colors.green400,
+            backgroundColor: theme.colors.emerald400 || theme.colors.green400,
+            background: `linear-gradient(135deg, ${theme.colors.emerald400 || theme.colors.green400}, ${theme.colors.teal400 || theme.colors.indigo400})`,
             paddingVertical: 16,
             borderRadius: 16,
             shadowColor: theme.colors.foreground,
