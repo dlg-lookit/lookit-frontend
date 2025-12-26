@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, TouchableOpacity, Switch } from 'react-native';
+import { ScrollView, TouchableOpacity, Switch, Alert } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Box, Text, useTheme } from '../../../theme';
 import { useThemeMode } from '../../../theme/ThemeProvider';
@@ -18,6 +18,7 @@ import {
   LucideBriefcase,
   LucidePartyPopper
 } from '../../../components/LucideIcons';
+import authService from '../../../services/authService';
 
 // Componente Logo de Lookit (estilo SignupStepTwo referencia con tema púrpura)
 const LookitLogo = () => {
@@ -123,9 +124,10 @@ const LookitLogo = () => {
   );
 };
 
-const SignupStepTwo = ({ onBack, onComplete, onSkip }) => {
+const SignupStepTwo = ({ onBack, onComplete, onSkip, signupData }) => {
   const { isDark } = useThemeMode();
   const theme = useTheme();
+  const [isLoading, setIsLoading] = useState(false);
   
   // Estados del formulario (siguiendo la referencia)
   const [formData, setFormData] = useState({
@@ -166,8 +168,168 @@ const SignupStepTwo = ({ onBack, onComplete, onSkip }) => {
   };
 
   // Manejar completar registro
-  const handleComplete = () => {
-    onComplete && onComplete(formData);
+  const handleComplete = async () => {
+    if (!signupData || !signupData.email || !signupData.password) {
+      Alert.alert('Error', 'Faltan datos de registro. Regresa al paso anterior.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      console.log('📝 Attempting registration for:', signupData.email);
+      console.log('📝 Signup data:', { email: signupData.email, passwordLength: signupData.password.length, firstName: signupData.firstName });
+
+      // Intentar registro primero
+      let response;
+      try {
+        response = await authService.register({
+          email: signupData.email,
+          password: signupData.password,
+          username: signupData.firstName, // Usar firstName como username
+        });
+      } catch (registerError) {
+        console.log('📝 Registration failed, checking if user already exists:', registerError.message);
+
+        // Si el registro falla porque el usuario ya existe, intentar login directamente
+        if (registerError.message.includes('User already exists') ||
+            registerError.message.includes('already exists') ||
+            registerError.message.includes('409')) {
+
+          console.log('🔄 User already exists, attempting direct login...');
+
+          const loginResponse = await authService.login({
+            email: signupData.email,
+            password: signupData.password,
+          });
+
+          if (loginResponse.success && loginResponse.data) {
+            console.log('✅ Direct login successful for existing user');
+
+            // Crear datos del usuario desde la respuesta de login
+            const userData = {
+              id: loginResponse.data.user?.id,
+              name: loginResponse.data.user?.name || loginResponse.data.user?.username || signupData.firstName,
+              email: loginResponse.data.user?.email || signupData.email,
+              token: loginResponse.data.token,
+              temperature: 22, // TODO: Obtener desde API o ubicación
+              location: 'Ciudad de México', // TODO: Obtener desde API o ubicación
+              preferences: formData.preferredStyles,
+              sizes: {
+                shirt: formData.shirtSize,
+                pants: formData.pantsSize,
+                shoes: formData.shoeSize,
+              }
+            };
+
+            console.log('✅ Login successful for existing user:', userData.name);
+            onComplete && onComplete(userData);
+
+            Alert.alert('¡Bienvenido de vuelta!', 'Has iniciado sesión exitosamente.');
+            setIsLoading(false);
+            return;
+          } else {
+            throw new Error('User exists but login failed. Please check your password.');
+          }
+        } else {
+          // Si es otro tipo de error, relanzarlo
+          throw registerError;
+        }
+      }
+
+      if (response.success && response.data) {
+        console.log('✅ Registration successful, response:', response.data);
+
+        // El registro fue exitoso, ahora hacer login automático
+        console.log('✅ Registration successful, attempting auto-login...');
+
+        const loginResponse = await authService.login({
+          email: signupData.email,
+          password: signupData.password,
+        });
+
+        if (loginResponse.success && loginResponse.data) {
+          console.log('✅ Auto-login successful, response:', loginResponse.data);
+
+          // Crear datos del usuario desde la respuesta de login
+          const userData = {
+            id: loginResponse.data.user?.id || response.data.user_id, // Usar user_id del registro si no viene en login
+            name: loginResponse.data.user?.name || loginResponse.data.user?.username || signupData.firstName,
+            email: loginResponse.data.user?.email || signupData.email,
+            token: loginResponse.data.token,
+            temperature: 22, // TODO: Obtener desde API o ubicación
+            location: 'Ciudad de México', // TODO: Obtener desde API o ubicación
+            preferences: formData.preferredStyles,
+            sizes: {
+              shirt: formData.shirtSize,
+              pants: formData.pantsSize,
+              shoes: formData.shoeSize,
+            }
+          };
+
+          console.log('✅ Auto-login successful for new user:', userData.name);
+          onComplete && onComplete(userData);
+
+          Alert.alert('¡Bienvenido!', 'Tu cuenta ha sido creada exitosamente.');
+        } else {
+          console.error('❌ Auto-login failed, response:', loginResponse);
+
+          // Fallback: Crear usuario con datos básicos del registro si el login falla
+          console.log('🔄 Auto-login failed, creating user with registration data as fallback...');
+
+          const userData = {
+            id: response.data.user_id, // Usar el user_id del registro
+            name: signupData.firstName,
+            email: signupData.email,
+            token: null, // No hay token porque login falló
+            warnedAboutToken: false, // Bandera para mostrar advertencia solo una vez
+            temperature: 22,
+            location: 'Ciudad de México',
+            preferences: formData.preferredStyles,
+            sizes: {
+              shirt: formData.shirtSize,
+              pants: formData.pantsSize,
+              shoes: formData.shoeSize,
+            }
+          };
+
+          console.log('✅ User created with fallback data:', userData.name);
+          onComplete && onComplete(userData);
+
+          Alert.alert(
+            'Cuenta creada',
+            'Tu cuenta ha sido creada exitosamente. Podrás acceder a las funciones básicas, pero algunas características avanzadas requieren verificación de sesión.',
+            [{ text: 'Entendido' }]
+          );
+        }
+      } else {
+        console.error('❌ Registration failed, response:', response);
+        throw new Error('Registration response was not successful');
+      }
+    } catch (error) {
+      console.error('❌ Registration/Login process failed:', error.message);
+
+      // Mostrar mensaje de error específico
+      let errorMessage = 'Error al crear la cuenta. Inténtalo de nuevo.';
+
+      if (error.message.includes('User already exists') || error.message.includes('already exists')) {
+        errorMessage = 'Ya existe una cuenta con este email. Intenta iniciar sesión en su lugar.';
+      } else if (error.message.includes('Email is required')) {
+        errorMessage = 'El email es obligatorio.';
+      } else if (error.message.includes('Password is required')) {
+        errorMessage = 'La contraseña es obligatoria.';
+      } else if (error.message.includes('network') || error.message.includes('fetch')) {
+        errorMessage = 'Error de conexión. Verifica tu conexión a internet.';
+      } else if (error.message.includes('401')) {
+        errorMessage = 'Credenciales incorrectas. Verifica tu email y contraseña.';
+      } else if (error.message.includes('check your password')) {
+        errorMessage = 'La contraseña es incorrecta. Si acabas de registrarte, intenta iniciar sesión manualmente.';
+      }
+
+      Alert.alert('Error de registro', errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

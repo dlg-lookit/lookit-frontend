@@ -133,7 +133,7 @@ class AuthService {
         throw new Error('Email and password are required');
       }
       
-      console.log('🔑 Logging in user:', { email });
+      console.log('🔑 Logging in user:', { email, passwordLength: password ? password.length : 0 });
       
       const response = await this.request(API_CONFIG.ENDPOINTS.LOGIN, {
         method: 'POST',
@@ -143,7 +143,7 @@ class AuthService {
         }),
       });
       
-      console.log('✅ Login successful');
+      console.log('✅ Login successful, full response:', response);
       
       return response;
       

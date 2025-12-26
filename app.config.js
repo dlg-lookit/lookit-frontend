@@ -29,7 +29,7 @@ export default {
     },
     extra: {
       // Variables de entorno para la API
-      EXPO_PUBLIC_API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:8080',
+      EXPO_PUBLIC_API_BASE_URL_JANUS: process.env.EXPO_PUBLIC_API_BASE_URL_JANUS || 'http://localhost:8080',
       EXPO_PUBLIC_API_TIMEOUT: process.env.EXPO_PUBLIC_API_TIMEOUT || '10000',
       EXPO_PUBLIC_NODE_ENV: process.env.EXPO_PUBLIC_NODE_ENV || 'development',
       EXPO_PUBLIC_APP_NAME: process.env.EXPO_PUBLIC_APP_NAME || 'Lookit',

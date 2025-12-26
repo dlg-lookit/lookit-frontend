@@ -15,7 +15,7 @@ const getEnvVar = (key, defaultValue = null) => {
 // Configuración de la API para el microservicio de autenticación (Janus Auth)
 const API_CONFIG = {
   // URL base del microservicio Janus Auth (desde variable de entorno)
-  BASE_URL: getEnvVar('EXPO_PUBLIC_API_BASE_URL', 'http://localhost:8080'),
+  BASE_URL: getEnvVar('EXPO_PUBLIC_API_BASE_URL_JANUS', 'http://localhost:8080'),
   
   // Endpoints disponibles
   ENDPOINTS: {
