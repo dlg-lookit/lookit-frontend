@@ -15,15 +15,34 @@ export default {
       backgroundColor: "#ffffff"
     },
     ios: {
-      supportsTablet: true
+      supportsTablet: true,
+      bundleIdentifier: "com.lookit.app"
     },
     android: {
       adaptiveIcon: {
         foregroundImage: "./assets/adaptive-icon.png",
         backgroundColor: "#ffffff"
       },
-      edgeToEdgeEnabled: true
+      edgeToEdgeEnabled: true,
+      package: "com.lookit.app",
+      permissions: [
+        "READ_MEDIA_IMAGES",
+        "READ_MEDIA_VIDEO",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
+    plugins: [
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Permitir a Lookit acceder a tus fotos para guardar outfits.",
+          "savePhotosPermission": "Permitir a Lookit guardar imágenes en tu galería.",
+          "isAccessMediaLocationEnabled": true,
+          "includeAudio": false
+        }
+      ]
+    ],
     web: {
       favicon: "./assets/favicon.png"
     },

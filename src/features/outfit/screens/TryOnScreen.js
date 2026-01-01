@@ -17,7 +17,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system/legacy';
 import { Asset } from 'expo-asset';
 import * as MediaLibrary from 'expo-media-library';
-import * as Permissions from 'expo-permissions';
+// NOTA: expo-permissions está deprecado, usamos MediaLibrary.requestPermissionsAsync() directamente
 import { ATENEA_CONFIG } from '../../../config/api';
 import ateneaService from '../../../services/ateneaService';
 
@@ -192,47 +192,99 @@ const TryOnScreen = ({ onNavigate }) => {
     }
 
     try {
-      // Solicitar permisos específicos para media library usando expo-permissions
-      const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
-      if (status !== 'granted') {
-        Alert.alert('Permiso requerido', 'Activa el permiso de fotos/almacenamiento para guardar la imagen.');
-        console.log('[TryOn] Media library permission not granted');
+      // 1. Verificar que el archivo existe antes de intentar guardarlo
+      console.log('[TryOn] Starting download. outputUri =', outputUri);
+      const fileInfo = await FileSystem.getInfoAsync(outputUri);
+      console.log('[TryOn] File info:', JSON.stringify(fileInfo, null, 2));
+      
+      if (!fileInfo.exists) {
+        console.log('[TryOn] ERROR: File does not exist at outputUri');
+        Alert.alert('Error', 'El archivo no existe en el almacenamiento local.');
         return;
       }
 
-      console.log('[TryOn] Media library permissions granted');
+      // 2. Solicitar permisos usando MediaLibrary directamente (NO expo-permissions - está deprecado)
+      console.log('[TryOn] Requesting MediaLibrary permissions...');
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      console.log('[TryOn] MediaLibrary permission status:', status);
+      
+      if (status !== 'granted') {
+        Alert.alert(
+          'Permiso requerido', 
+          'Activa el permiso de fotos/almacenamiento en Configuración para guardar la imagen.'
+        );
+        return;
+      }
 
-      const asset = await MediaLibrary.createAssetAsync(outputUri);
+      // 3. Asegurar que la URI tiene el prefijo file:// correcto
+      let fileUri = outputUri;
+      if (!fileUri.startsWith('file://')) {
+        fileUri = 'file://' + fileUri;
+        console.log('[TryOn] Added file:// prefix. New URI:', fileUri);
+      }
+      console.log('[TryOn] Using final URI:', fileUri);
 
+      // 4. Crear el asset en MediaLibrary
+      console.log('[TryOn] Creating asset with MediaLibrary.createAssetAsync...');
+      const asset = await MediaLibrary.createAssetAsync(fileUri);
+      console.log('[TryOn] Asset created successfully:', JSON.stringify(asset, null, 2));
+
+      // 5. En Android, intentar mover a álbum (opcional, puede fallar en Android 13+)
       if (Platform.OS === 'android') {
         try {
-          // Intentar guardar en un álbum propio para que sea más visible en la galería
           const albumName = 'Lookit';
+          console.log('[TryOn] Android: Attempting to save to album:', albumName);
           let album = await MediaLibrary.getAlbumAsync(albumName);
           if (!album) {
+            console.log('[TryOn] Album does not exist, creating...');
             album = await MediaLibrary.createAlbumAsync(albumName, asset, false);
           } else {
+            console.log('[TryOn] Album exists, adding asset...');
             await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
           }
-          console.log('[TryOn] Image saved to Android album', {
-            album: albumName,
-            uri: asset.uri,
-          });
+          console.log('[TryOn] Image saved to Android album successfully');
         } catch (albumError) {
-          console.log('[TryOn] Android album error, fallback to saveToLibraryAsync', albumError);
-          await MediaLibrary.saveToLibraryAsync(asset.uri || outputUri);
+          // En Android 13+ los álbumes personalizados pueden fallar, pero el asset ya está guardado
+          console.log('[TryOn] Album error (asset still saved):', albumError.message);
         }
-      } else {
-        await MediaLibrary.saveToLibraryAsync(asset.uri || outputUri);
-        console.log('[TryOn] Image saved to media library (iOS)', {
-          uri: asset.uri || outputUri,
-        });
       }
 
       Alert.alert('Guardado', 'La imagen se ha guardado en tu galería.');
-    } catch (mlError) {
-      console.log('[TryOn] MediaLibrary error', mlError);
-      const message = mlError?.message || 'Error desconocido al guardar en la galería.';
+      
+    } catch (error) {
+      console.error('[TryOn] Full error object:', error);
+      console.error('[TryOn] Error name:', error?.name);
+      console.error('[TryOn] Error message:', error?.message);
+      console.error('[TryOn] Error stack:', error?.stack);
+      
+      // Intentar fallback: copiar a cache y reintentar
+      if (Platform.OS === 'android') {
+        try {
+          console.log('[TryOn] Trying fallback method: copying to cache...');
+          const fileName = outputUri.split('/').pop();
+          const cacheUri = FileSystem.cacheDirectory + fileName;
+          console.log('[TryOn] Fallback: copying from', outputUri, 'to', cacheUri);
+          
+          await FileSystem.copyAsync({ from: outputUri, to: cacheUri });
+          console.log('[TryOn] Fallback: file copied to cache');
+          
+          let fallbackUri = cacheUri;
+          if (!fallbackUri.startsWith('file://')) {
+            fallbackUri = 'file://' + fallbackUri;
+          }
+          
+          console.log('[TryOn] Fallback: creating asset from cache URI:', fallbackUri);
+          const asset = await MediaLibrary.createAssetAsync(fallbackUri);
+          console.log('[TryOn] Fallback successful! Asset:', JSON.stringify(asset, null, 2));
+          
+          Alert.alert('Guardado', 'La imagen se ha guardado en tu galería.');
+          return;
+        } catch (fallbackError) {
+          console.error('[TryOn] Fallback also failed:', fallbackError);
+        }
+      }
+      
+      const message = error?.message || 'Error desconocido al guardar en la galería.';
       Alert.alert('Error', `No se pudo guardar la imagen.\n\nDetalle: ${message}`);
     }
   };
