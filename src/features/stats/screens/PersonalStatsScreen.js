@@ -17,6 +17,7 @@ import {
   Shirt,
   Award 
 } from '../../../components/Icons';
+import { LucideArrowLeft } from '../../../components/LucideIcons';
 
 const PersonalStatsScreen = ({ user, wardrobeStreak = 7, onNavigate }) => {
   const theme = useTheme();
@@ -83,16 +84,31 @@ const PersonalStatsScreen = ({ user, wardrobeStreak = 7, onNavigate }) => {
       {/* Header */}
       <Box 
         flexDirection="row" 
-        alignItems="center" 
-        justifyContent="space-between"
+        alignItems="center"
         paddingHorizontal="lg" 
         paddingTop="xl" 
         paddingBottom="md"
       >
-        <Text variant="header">Mis Estadísticas</Text>
-        <TouchableOpacity onPress={handleShare}>
-          <Share2 size={24} color={theme.colors.muted} />
+        {/* Botón de navegación hacia atrás */}
+        <TouchableOpacity
+          onPress={() => onNavigate && onNavigate('home')}
+          style={{
+            padding: 8,
+            borderRadius: 20,
+            backgroundColor: theme.colors.muted + '20', // fondo semi-transparente
+            marginRight: 12,
+          }}
+        >
+          <LucideArrowLeft size={20} color={theme.colors.muted} />
         </TouchableOpacity>
+        
+        <Text variant="header">Mis Estadísticas</Text>
+        
+        <Box flexDirection="row" style={{ marginLeft: 'auto' }}>
+          <TouchableOpacity onPress={handleShare}>
+            <Share2 size={24} color={theme.colors.muted} />
+          </TouchableOpacity>
+        </Box>
       </Box>
 
       {/* Content */}

@@ -364,15 +364,21 @@ const TryOnScreen = ({ onNavigate }) => {
         }}
       >
         <Box flexDirection="row" alignItems="center">
+          {/* Botón de navegación hacia atrás en esquina superior izquierda */}
           {onNavigate && (
-            <Button
-              variant="ghost"
+            <TouchableOpacity
               onPress={() => onNavigate('home')}
-              style={{ marginRight: 12, width: 36, height: 36, borderRadius: 999 }}
+              style={{
+                padding: 8,
+                borderRadius: 20,
+                backgroundColor: theme.colors.muted + '20', // fondo semi-transparente
+                marginRight: 12,
+              }}
             >
-              <ArrowLeft size={20} color={theme.colors.text || '#111'} />
-            </Button>
+              <ArrowLeft size={20} color={theme.colors.muted} />
+            </TouchableOpacity>
           )}
+          
           <Box>
             <Text variant="subheader" marginBottom="xs">Virtual Try-On</Text>
             <Text variant="caption" color="muted">Prueba prendas virtualmente</Text>

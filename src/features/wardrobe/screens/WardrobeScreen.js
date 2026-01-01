@@ -3,6 +3,7 @@ import { ScrollView, TouchableOpacity, Modal, Alert } from 'react-native';
 import { Box, Text, useTheme } from '../../../theme';
 import { Button, Badge, Card, ImageWithFallback } from '../../../components';
 import { Plus, Camera, Filter, Search } from '../../../components/Icons';
+import { LucideArrowLeft } from '../../../components/LucideIcons';
 import BottomNavigation from '../../../components/BottomNavigation';
 
 const WardrobeScreen = ({ user, onNavigate }) => {
@@ -15,37 +16,37 @@ const WardrobeScreen = ({ user, onNavigate }) => {
       name: 'White T-Shirt', 
       category: 'Tops', 
       worn: '3x this month', 
-      image: 'https://images.unsplash.com/photo-1524282745852-a463fa495a7f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtaW5pbWFsJTIwZmFzaGlvbiUyMGNsb3RoaW5nJTIwb3V0Zml0fGVufDF8fHx8MTc1NTA5ODY2NXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral' 
+      image: 'https://via.placeholder.com/300x400/FFFFFF/000000?text=White+T-Shirt' 
     },
     { 
       name: 'Blue Jeans', 
       category: 'Bottoms', 
       worn: '5x this month', 
-      image: 'https://images.unsplash.com/photo-1655252205431-5d0ef316837b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXJkcm9iZSUyMGNsb3NldCUyMGNsb3RoZXN8ZW58MXx8fHwxNzU1MDk4NjY2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral' 
+      image: 'https://via.placeholder.com/300x400/0000FF/FFFFFF?text=Blue+Jeans' 
     },
     { 
       name: 'Black Sneakers', 
       category: 'Shoes', 
       worn: '7x this month', 
-      image: 'https://images.unsplash.com/photo-1565953198075-db265882ee68?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwYWNjZXNzb3JpZXMlMjBzaG9lc3xlbnwxfHx8fDE3NTUwOTg2NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral' 
+      image: 'https://via.placeholder.com/300x400/000000/FFFFFF?text=Black+Sneakers' 
     },
     { 
       name: 'Beige Coat', 
       category: 'Outerwear', 
       worn: '2x this month', 
-      image: 'https://images.unsplash.com/photo-1524498250077-390f9e378fc0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjYXN1YWwlMjBmYXNoaW9uJTIwc3R5bGV8ZW58MXx8fHwxNzU1MDk4NjY2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral' 
+      image: 'https://via.placeholder.com/300x400/F5F5DC/000000?text=Beige+Coat' 
     },
     { 
       name: 'Cotton Dress', 
       category: 'Dresses', 
       worn: '1x this month', 
-      image: 'https://images.unsplash.com/photo-1736555142217-916540c7f1b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBtaW5pbWFsaXN0JTIwb3V0Zml0fGVufDF8fHx8MTc1NTA5ODY2Nnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral' 
+      image: 'https://via.placeholder.com/300x400/FFB6C1/000000?text=Cotton+Dress' 
     },
     { 
       name: 'Leather Bag', 
       category: 'Accessories', 
       worn: '4x this month', 
-      image: 'https://images.unsplash.com/photo-1655252205431-5d0ef316837b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3YXJkcm9iZSUyMGNsb3NldCUyMGNsb3RoZXN8ZW58MXx8fHwxNzU1MDk4NjY2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral' 
+      image: 'https://via.placeholder.com/300x400/8B4513/FFFFFF?text=Leather+Bag' 
     }
   ];
 
@@ -80,13 +81,29 @@ const WardrobeScreen = ({ user, onNavigate }) => {
           backgroundColor: theme.colors.indigo50,
         }}
       >
-        <Box flexDirection="row" justifyContent="space-between" alignItems="center" marginBottom="md">
+        <Box flexDirection="row" alignItems="center" marginBottom="md">
+          {/* Botón de navegación hacia atrás */}
+          <TouchableOpacity
+            onPress={() => onNavigate && onNavigate('home')}
+            style={{
+              padding: 8,
+              borderRadius: 20,
+              backgroundColor: theme.colors.muted + '20', // fondo semi-transparente
+              marginRight: 12,
+            }}
+          >
+            <LucideArrowLeft size={20} color={theme.colors.muted} />
+          </TouchableOpacity>
+          
           <Text variant="header" color="foreground">
             My Wardrobe
           </Text>
-          <TouchableOpacity>
-            <Search size={24} color={theme.colors.muted} />
-          </TouchableOpacity>
+          
+          <Box flexDirection="row" style={{ marginLeft: 'auto' }}>
+            <TouchableOpacity>
+              <Search size={24} color={theme.colors.muted} />
+            </TouchableOpacity>
+          </Box>
         </Box>
 
         {/* Filters */}

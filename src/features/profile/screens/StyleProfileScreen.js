@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { Box, Text, useTheme } from '../../../theme';
 import { Button, Badge, Card } from '../../../components';
-import { Edit3, Palette, Star, LogOut } from '../../../components/LucideIcons';
+import { Edit3, Palette, Star, LogOut, LucideArrowLeft } from '../../../components/LucideIcons';
 import BottomNavigation from '../../../components/BottomNavigation';
 
 /**
@@ -107,11 +107,25 @@ const StyleProfileScreen = ({ user, onNavigate, onLogout }) => {
           backgroundColor: theme.colors.emerald50 || theme.colors.green50,
         }}
       >
-        <Box flexDirection="row" justifyContent="space-between" alignItems="center" marginBottom="lg">
+        <Box flexDirection="row" alignItems="center" marginBottom="lg">
+          {/* Botón de navegación hacia atrás */}
+          <TouchableOpacity
+            onPress={() => onNavigate && onNavigate('home')}
+            style={{
+              padding: 8,
+              borderRadius: 20,
+              backgroundColor: theme.colors.muted + '20', // fondo semi-transparente
+              marginRight: 12,
+            }}
+          >
+            <LucideArrowLeft size={20} color={theme.colors.muted} />
+          </TouchableOpacity>
+          
           <Text variant="header" color="foreground">
             Style Profile
           </Text>
-          <Box flexDirection="row" style={{ gap: 8 }}>
+          
+          <Box flexDirection="row" alignItems="center" style={{ marginLeft: 'auto', gap: 8 }}>
             <TouchableOpacity>
               <Edit3 size={24} color={theme.colors.muted} />
             </TouchableOpacity>

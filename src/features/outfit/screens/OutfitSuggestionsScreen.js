@@ -15,6 +15,7 @@ import {
   Cloud, 
   ChevronDown 
 } from '../../../components/Icons';
+import { LucideArrowLeft } from '../../../components/LucideIcons';
 
 const { width } = Dimensions.get('window');
 
@@ -28,21 +29,21 @@ const OutfitSuggestionsScreen = ({ user, onNavigate }) => {
   // Datos de ejemplo para sugerencias
   const outfitSuggestions = [
     {
-      image: 'https://images.unsplash.com/photo-1524282745852-a463fa495a7f?w=400',
+      image: 'https://via.placeholder.com/400x600/6366f1/ffffff?text=Minimalist+Outfit',
       style: 'Minimalist',
       match: '96%',
       weather: 'Perfect for cloudy weather',
       id: 0
     },
     {
-      image: 'https://images.unsplash.com/photo-1736555142217-916540c7f1b7?w=400',
+      image: 'https://via.placeholder.com/400x600/10b981/ffffff?text=Modern+Casual',
       style: 'Modern Casual',
       match: '92%',
       weather: 'Great for mild temperatures',
       id: 1
     },
     {
-      image: 'https://images.unsplash.com/photo-1524498250077-390f9e378fc0?w=400',
+      image: 'https://via.placeholder.com/400x600/f59e0b/ffffff?text=Smart+Casual',
       style: 'Smart Casual',
       match: '89%',
       weather: 'Ideal for office wear',
@@ -85,9 +86,24 @@ const OutfitSuggestionsScreen = ({ user, onNavigate }) => {
     <Box flex={1} backgroundColor="background">
       {/* Header */}
       <Box paddingHorizontal="lg" paddingTop="xl" paddingBottom="md">
-        <Text variant="header" marginBottom="md">
-          Sugerencias de Outfits
-        </Text>
+        <Box flexDirection="row" alignItems="center" marginBottom="md">
+          {/* Botón de navegación hacia atrás */}
+          <TouchableOpacity
+            onPress={() => onNavigate && onNavigate('home')}
+            style={{
+              padding: 8,
+              borderRadius: 20,
+              backgroundColor: theme.colors.muted + '20', // fondo semi-transparente
+              marginRight: 12,
+            }}
+          >
+            <LucideArrowLeft size={20} color={theme.colors.muted} />
+          </TouchableOpacity>
+          
+          <Text variant="header">
+            Sugerencias de Outfits
+          </Text>
+        </Box>
         
         {/* Filtros */}
         <Box flexDirection="row" marginBottom="md" gap="sm">

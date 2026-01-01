@@ -27,21 +27,8 @@ const HomeScreen = ({ user, onNavigate }) => {
     location: 'Ciudad',
   };
 
-  // Datos de ejemplo para sugerencias
-  const outfitSuggestions = [
-    {
-      id: 1,
-      style: 'Minimal',
-      match: '96%',
-      image: 'https://images.unsplash.com/photo-1524282745852-a463fa495a7f?w=400',
-    },
-    {
-      id: 2,
-      style: 'Casual',
-      match: '89%',
-      image: 'https://images.unsplash.com/photo-1524498250077-390f9e378fc0?w=400',
-    },
-  ];
+  // TODO: Implementar llamada a API para obtener sugerencias de outfits
+  // const outfitSuggestions = [ ... ];
 
   const handleDressMeToday = () => {
     onNavigate && onNavigate('suggestions');
@@ -160,77 +147,19 @@ const HomeScreen = ({ user, onNavigate }) => {
         {/* Contenido principal */}
         <Box paddingHorizontal="lg">
           {/* Último outfit usado */}
-          <TouchableOpacity onPress={handleViewWardrobe}>
-            <Card marginBottom="lg" padding="md">
-              <Box flexDirection="row" alignItems="center">
-                <Box
-                  width={48}
-                  height={48}
-                  borderRadius="md"
-                  overflow="hidden"
-                  marginRight="sm"
-                >
-                  <ImageWithFallback
-                    source={{
-                      uri: 'https://images.unsplash.com/photo-1524282745852-a463fa495a7f?w=200'
-                    }}
-                    style={{ width: '100%', height: '100%' }}
-                    fallbackText="👔"
-                  />
-                </Box>
-                
-                <Box flex={1}>
-                  <Text variant="body" marginBottom="xs">
-                    Último outfit usado
-                  </Text>
-                  <Text variant="caption" color="muted">
-                    Ayer • Smart Casual
-                  </Text>
-                </Box>
-                
-                <ArrowRight size={16} color={theme.colors.muted} />
-              </Box>
-            </Card>
-          </TouchableOpacity>
+          <Box marginBottom="lg">
+            <Text variant="subheader" marginBottom="md">
+              Último outfit usado
+            </Text>
+            {/* TODO: Implementar llamada a API para obtener el último outfit usado por el usuario */}
+          </Box>
 
           {/* Sugerencias de hoy */}
           <Box marginBottom="lg">
             <Text variant="subheader" marginBottom="md">
               Sugerencias de hoy
             </Text>
-            
-            <Box flexDirection="row" justifyContent="space-between">
-              {outfitSuggestions.map((outfit, index) => (
-                <TouchableOpacity
-                  key={outfit.id}
-                  onPress={handleDressMeToday}
-                  style={{ width: '48%' }}
-                >
-                  <Card padding="sm">
-                    <Box
-                      width="100%"
-                      height={80}
-                      borderRadius="md"
-                      overflow="hidden"
-                      marginBottom="sm"
-                    >
-                      <ImageWithFallback
-                        source={{ uri: outfit.image }}
-                        style={{ width: '100%', height: '100%' }}
-                        fallbackText="👕"
-                      />
-                    </Box>
-                    
-                    <Text variant="caption" marginBottom="xs">
-                      {outfit.style}
-                    </Text>
-                    <Text variant="caption" color="muted">
-                      {outfit.match} match
-                    </Text>
-                  </Card>
-                </TouchableOpacity>
-              ))}
-            </Box>
+            {/* TODO: Implementar llamada a API para obtener sugerencias de outfits del día */}
           </Box>
 
           {/* Tendencias de la semana */}
@@ -238,33 +167,7 @@ const HomeScreen = ({ user, onNavigate }) => {
             <Text variant="subheader" marginBottom="md">
               Tendencias de la semana
             </Text>
-            
-            <Card padding="md">
-              <Box flexDirection="row" alignItems="center">
-                <Box
-                  width={40}
-                  height={40}
-                  borderRadius="full"
-                  backgroundColor="primary"
-                  alignItems="center"
-                  justifyContent="center"
-                  marginRight="sm"
-                >
-                  <Text variant="body" color="primaryForeground">🔥</Text>
-                </Box>
-                
-                <Box flex={1}>
-                  <Text variant="body" marginBottom="xs">
-                    Estilo Minimalist
-                  </Text>
-                  <Text variant="caption" color="muted">
-                    +25% esta semana
-                  </Text>
-                </Box>
-                
-                <ArrowRight size={16} color={theme.colors.muted} />
-              </Box>
-            </Card>
+            {/* TODO: Implementar llamada a API para obtener tendencias semanales de estilos */}
           </Box>
         </Box>
       </ScrollView>

@@ -129,6 +129,29 @@ function MainApp() {
     setCurrentScreen('signup-step-1');
   };
 
+  // Función general para navegación hacia atrás
+  const handleGoBack = () => {
+    switch (currentScreen) {
+      case 'signup-step-1':
+        setCurrentScreen('login');
+        setSignupData(null);
+        break;
+      case 'signup-step-2':
+        setCurrentScreen('signup-step-1');
+        break;
+      case 'suggestions':
+      case 'wardrobe':
+      case 'stats':
+      case 'profile':
+      case 'try-on':
+        setCurrentScreen('home');
+        break;
+      default:
+        setCurrentScreen('home'); // fallback
+        break;
+    }
+  };
+
   const handleHomeNavigation = (destination) => {
     // Verificar autenticación antes de navegar
     requireAuth(() => {
